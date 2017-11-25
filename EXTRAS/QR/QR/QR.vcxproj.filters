@@ -21,12 +21,6 @@
     <ClInclude Include="targetver.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="Librerias.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="Header.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="qrcodegen.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
@@ -35,13 +29,10 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="PDF.cpp">
+    <ClCompile Include="QR.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="qrcodegen.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="qrmain.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
