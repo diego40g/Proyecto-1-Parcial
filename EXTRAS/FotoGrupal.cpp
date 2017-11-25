@@ -28,7 +28,7 @@ int main()
 	 for(int x=0;x<100;x+=10) 
 	 {
 	 	fflush(stdin);
-	  BCX_Bitmap("grupo.bmp",hConWnd,123,100,0,0,0);
+	  BCX_Bitmap("FotoGrupal.bmp",hConWnd,123,100,0,0,0);
 	  Sleep(1000);
 	  }
       getchar();
