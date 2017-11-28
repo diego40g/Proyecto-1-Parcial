@@ -9,14 +9,22 @@ PROFESOR: FERNANDO SOLIS
 /*#ifdef _MSC_VER
 #define _CTR_SECURE_NO_WARNINGS
 #endif*/
-#include<iostream>
-#include<stdio.h>
-#include<string.h>
-#include<conio.h>
-#include<stdlib.h>
-#include<windows.h>
-#include<string>
-#include<time.h>
+#include <iostream>
+#include <Windows.h>
+#include <stdio.h>
+#include <conio.h>
+#include <stdlib.h>
+#include <time.h> 
+#include <string.h>
+#include <string>
+#include <MMsystem.h>
+#include <ctype.h>
+#include <fstream>
+#include <iomanip>
+#include"PDF.h"
+#include"stdafx.h"
+#include"Librerias.h"
+#include"qrcodegen.h"
 using namespace std;
 
 struct Nodo {
@@ -24,7 +32,7 @@ struct Nodo {
 	char fechaEntrada[35];
 	char horaSalida[11];
 	char fechaSalida[35];
-	long numeroCedula;
+	long int numeroCedula;
 	char modeloAuto[10];
 	float tarifaPagar;
 	char nombrePropietario[15];
@@ -49,6 +57,48 @@ void gotoxy(int x, int y) {
 	dwPos.Y = y;
 	SetConsoleCursorPosition(hcon, dwPos);
 }
+
+void imprimirCar(int x)
+{
+	system("cls");
+	color(9);
+	gotoxy(30, 5);
+	printf("INGRESO AL PARQUEADERO");
+	gotoxy(x, 10);
+	printf("  //////////////////");
+	gotoxy(x, 11);
+	printf(" /////////////     //");
+	gotoxy(x, 12);
+	printf("//////////////////////////");
+	gotoxy(x, 13);
+	printf("/////////////////////////");
+	gotoxy(x, 14);
+	printf("   (  )            (  )");
+	system("cls");
+}
+
+void carrito()
+{
+	int x = 2, aux = 13;
+
+	for (;;)
+	{
+		aux = _getch();
+		imprimirCar(x);
+		x++;
+		if (aux == 13)
+		{
+			break;
+		}
+		if (x == 54)
+		{
+			x = 0;
+		}
+	}
+	printf("TOMAR EL TICK");
+}
+
+
 string convertir(char *c, int i) {
 	return string(*c, i);
 }
@@ -56,6 +106,29 @@ char* covertStringChar(string cadena) {
 	char* aux = new char[cadena.size()];
 	strcpy(aux, cadena.c_str());
 	return aux;
+}
+
+/*
+llamar a la ayuda
+ShellExecute(NULL, TEXT("open"), TEXT("ayuda.chm"), NULL, NULL, SW_SHOWNORMAL);
+ex = 'n';
+break;
+*/
+int  AyudaF1(int car)//23 esc y 13 intro
+{
+	int x;
+	int imp;
+	printf("\nPresione Enter ");
+	for (;; ) {
+		x = _getch();//captura la tecla de función ,pertenece a la libreria conio.h
+		if (x == car)
+		{
+			imp = 1;
+			printf("\nGenerando...");
+			break;
+		}
+	}
+	return imp;
 }
 void letras(char* val) {
 	int c, i = 0;
@@ -70,6 +143,30 @@ void letras(char* val) {
 	}
 
 	return;
+}
+static void printQr(const uint8_t qrcode[]) {
+	int size = qrcodegen_getSize(qrcode);
+	int border = 4;
+	for (int y = -border; y < size + border; y++) {
+		for (int x = -border; x < size + border; x++) {
+			fputs((qrcodegen_getModule(qrcode, x, y) ? "\333\333" : "  "), stdout);
+		}
+		fputs("\n", stdout);
+	}
+}
+
+static void generarQr(char *loqueimprime)
+{
+	char *dato = loqueimprime;
+	enum qrcodegen_Ecc errCorLvl = qrcodegen_Ecc_LOW;  // Error correction level
+
+													   // Make and print the QR Code symbol
+	uint8_t qrcode[qrcodegen_BUFFER_LEN_MAX];
+	uint8_t tempBuffer[qrcodegen_BUFFER_LEN_MAX];
+	bool ok = qrcodegen_encodeText(dato, tempBuffer, qrcode, errCorLvl,
+		qrcodegen_VERSION_MIN, qrcodegen_VERSION_MAX, qrcodegen_Mask_AUTO, true);
+	if (ok)
+		printQr(qrcode);
 }
 void numeros(char* val) {
 	int c, i = 0;
@@ -248,6 +345,8 @@ int menu() {
 	return n;
 }
 void ingresarPrimerDato(ListaDoble &lista) {
+	char*QR = (char*)malloc(50 * sizeof(char));
+	char*cad1 = (char*)malloc(10 * sizeof(char));
 	FILE *ticket;
 	Nodo *aux = new Nodo();
 	char *modeloAuto = (char*)malloc(10 * sizeof(char));
@@ -278,6 +377,9 @@ void ingresarPrimerDato(ListaDoble &lista) {
 	GetTimeFormat(LOCALE_USER_DEFAULT, TIME_FORCE24HOURFORMAT, NULL, NULL, aux->horaEntrada, 11);
 	aux->anteriorDireccion = aux->siguienteDireccion = NULL;
 	lista = aux;
+	carrito(); color(07);
+	system("pause");
+	system("CLS");
 	fopen("TICKET DE ENTRADA.txt", "w");
 	system("cls");
 	ticket = fopen("TICKET DE ENTRADA.txt", "w");
@@ -331,6 +433,23 @@ void ingresarPrimerDato(ListaDoble &lista) {
 	fprintf(ticket, "\n*\t\tHORA O FRACCION\t\t\t\t*");
 	fprintf(ticket, "\n*********************************************************");
 	fclose(ticket);
+	system("pause");
+	system("CLS");
+	strcpy(QR, aux->nombrePropietario);
+	strcat(QR, "\n");
+	_itoa(aux->numeroCedula, cad1, 10);
+	strcat(QR, cad1 );
+	strcat(QR, "\n");
+	strcat(QR, aux->fechaEntrada);
+	strcat(QR, "\n");
+	strcat(QR, aux->horaEntrada);
+	strcat(QR, "\n");
+	strcat(QR, aux->placaAuto);
+	strcat(QR, "\n");
+	strcat(QR, aux->modeloAuto);
+	strcat(QR, "\n");
+	strcat(QR, "HORA O FRACCION");
+	generarQr(QR);
 	}
 	else {
 		printf("\nEL PRIMER VEHICULO YA ESTA EN EL PARQUEADERO\n");
@@ -338,6 +457,8 @@ void ingresarPrimerDato(ListaDoble &lista) {
 
 }
 void ingresarUltimaPosicion(ListaDoble &lista) {
+	char*QR = (char*)malloc(50 * sizeof(char));
+	char*cad1 = (char*)malloc(10 * sizeof(char));
 	FILE *ticket;
 	Placas placa;
 	Nodo *aux2 = lista, *aux = new Nodo();
@@ -410,7 +531,10 @@ void ingresarUltimaPosicion(ListaDoble &lista) {
 		aux->siguienteDireccion = aux2->siguienteDireccion;
 		aux2->siguienteDireccion = aux;
 		aux->anteriorDireccion = aux2;
+		carrito(); color(07);
 		printf("\nDATO INGRESADO!");
+		system("pause");
+		system("cls");
 		fopen("TICKET DE ENTRADA.txt", "w");
 		system("cls");
 		ticket = fopen("TICKET DE ENTRADA.txt", "w");
@@ -464,12 +588,31 @@ void ingresarUltimaPosicion(ListaDoble &lista) {
 		fprintf(ticket, "\n*\t\tHORA O FRACCION\t\t\t\t*");
 		fprintf(ticket, "\n*********************************************************");
 		fclose(ticket);
+		system("pause");
+		system("CLS");
+		strcpy(QR, aux->nombrePropietario);
+		strcat(QR, "\n");
+		_itoa(aux->numeroCedula, cad1, 10);
+		strcat(QR, cad1);
+		strcat(QR, "\n");
+		strcat(QR, aux->fechaEntrada);
+		strcat(QR, "\n");
+		strcat(QR, aux->horaEntrada);
+		strcat(QR, "\n");
+		strcat(QR, aux->placaAuto);
+		strcat(QR, "\n");
+		strcat(QR, aux->modeloAuto);
+		strcat(QR, "\n");
+		strcat(QR, "HORA O FRACCION");
+		generarQr(QR);
 	}
 	else {
 		printf("\nDEBE INGRESAR EL PRIMER ELEMENTO!!\n");
 	}
 }
 void ingresarPrimeraPosicion(ListaDoble &lista) {
+	char*QR = (char*)malloc(50 * sizeof(char));
+	char*cad1 = (char*)malloc(10 * sizeof(char));
 	FILE *ticket;
 	Nodo *aux = new Nodo(), *aux2 = lista;
 	Placas placa;
@@ -537,7 +680,10 @@ void ingresarPrimeraPosicion(ListaDoble &lista) {
 		aux->anteriorDireccion = lista->anteriorDireccion;
 		lista->anteriorDireccion = aux;
 		lista = aux;
+		carrito(); color(07);
 		printf("\nDATO INGRESADO!!!\n");
+		system("pause");
+		system("cls");
 		fopen("TICKET DE ENTRADA.txt", "w");
 		system("cls");
 		ticket = fopen("TICKET DE ENTRADA.txt", "w");
@@ -591,12 +737,31 @@ void ingresarPrimeraPosicion(ListaDoble &lista) {
 		fprintf(ticket, "\n*\t\tHORA O FRACCION\t\t\t\t*");
 		fprintf(ticket, "\n*********************************************************");
 		fclose(ticket);
+		system("pause");
+		system("CLS");
+		strcpy(QR, aux->nombrePropietario);
+		strcat(QR, "\n");
+		_itoa(aux->numeroCedula, cad1, 10);
+		strcat(QR, cad1);
+		strcat(QR, "\n");
+		strcat(QR, aux->fechaEntrada);
+		strcat(QR, "\n");
+		strcat(QR, aux->horaEntrada);
+		strcat(QR, "\n");
+		strcat(QR, aux->placaAuto);
+		strcat(QR, "\n");
+		strcat(QR, aux->modeloAuto);
+		strcat(QR, "\n");
+		strcat(QR, "HORA O FRACCION");
+		generarQr(QR);
 	}
 	else {
 		printf("\nDEBE INGRESAR EL PRIMER ELEMENTO!!\n");
 	}
 }
 void ingresarEntre(ListaDoble lista) {
+	char*QR = (char*)malloc(50 * sizeof(char));
+	char*cad1 = (char*)malloc(10 * sizeof(char));
 	FILE *ticket;
 	Placas placa;
 	char *letrasPlaca = (char*)malloc(3 * sizeof(char));
@@ -680,6 +845,9 @@ void ingresarEntre(ListaDoble lista) {
 					aux->anteriorDireccion = aux2;
 					aux->siguienteDireccion->anteriorDireccion = aux;
 					printf("\nSE INSERTo ENTRE %d y %d", posicion, posicion + 1);
+					carrito(); color(07);
+					system("pause");
+					system("cls");
 					fopen("TICKET DE ENTRADA.txt", "w");
 					system("cls");
 					ticket = fopen("TICKET DE ENTRADA.txt", "w");
@@ -733,6 +901,23 @@ void ingresarEntre(ListaDoble lista) {
 					fprintf(ticket, "\n*\t\tHORA O FRACCION\t\t\t\t*");
 					fprintf(ticket, "\n*********************************************************");
 					fclose(ticket);
+					system("pause");
+					system("CLS");
+					strcpy(QR, aux->nombrePropietario);
+					strcat(QR, "\n");
+					_itoa(aux->numeroCedula, cad1, 10);
+					strcat(QR, cad1);
+					strcat(QR, "\n");
+					strcat(QR, aux->fechaEntrada);
+					strcat(QR, "\n");
+					strcat(QR, aux->horaEntrada);
+					strcat(QR, "\n");
+					strcat(QR, aux->placaAuto);
+					strcat(QR, "\n");
+					strcat(QR, aux->modeloAuto);
+					strcat(QR, "\n");
+					strcat(QR, "HORA O FRACCION");
+					generarQr(QR);
 					//	printf("\n\nDATO INGRESADO!\n\n");
 					while (aux2->anteriorDireccion != NULL) {
 						aux2 = aux2->anteriorDireccion;
@@ -763,6 +948,8 @@ void ingresarEntre(ListaDoble lista) {
 	
 }
 void calcularTarifa(ListaDoble lista, long ced, char* placa, int comp) {
+	char*QR = (char*)malloc(50 * sizeof(char));
+	char*cad1 = (char*)malloc(10 * sizeof(char));
 	FILE *ticket;
 	if (lista != NULL) {
 		if (comp == 0) {
@@ -777,6 +964,7 @@ void calcularTarifa(ListaDoble lista, long ced, char* placa, int comp) {
 				int horasEnteroSalida, minutosEnteroSalida, segundosEnteroSalida;
 				char *horasEntrada, *minutosEntrada, *segundosEntrada, *horasSalida, *minutosSalida, *segundosSalida;
 				char *aux = lista->horaEntrada, *aux1 = lista->horaSalida;
+				
 				while (i<1) {
 					horasEntrada = strtok(aux, ":");
 					minutosEntrada = strtok(NULL, ":");
@@ -859,6 +1047,26 @@ void calcularTarifa(ListaDoble lista, long ced, char* placa, int comp) {
 				fprintf(ticket, "\n*********************************************************");
 				fclose(ticket);
 				system("pause");
+				system("CLS");
+				strcpy(QR, lista->nombrePropietario);
+				strcat(QR, "\n");
+				_itoa(lista->numeroCedula, cad1, 10);
+				strcat(QR, cad1);
+				strcat(QR, "FECHA DE ENTRADA\n");
+				strcat(QR, lista->fechaEntrada);
+				strcat(QR, "HORA DE ENTRADA\n");
+				strcat(QR, lista->horaEntrada);
+				strcat(QR, "FECHA DE SALIDA\n");
+				strcat(QR, lista->fechaSalida);
+				strcat(QR, "HORA DE SALIDA\n");
+				strcat(QR, lista->horaSalida);
+				strcat(QR, "\n");
+				strcat(QR, lista->placaAuto);
+				strcat(QR, "\n");
+				strcat(QR, lista->modeloAuto);
+				strcat(QR, "\n");
+				strcat(QR, "HORA O FRACCION");
+				generarQr(QR);
 			}
 		}
 		if (comp == 4) {
@@ -950,6 +1158,26 @@ void calcularTarifa(ListaDoble lista, long ced, char* placa, int comp) {
 				fprintf(ticket, "\n*********************************************************");
 				fclose(ticket);
 				system("pause");
+				system("CLS");
+				strcpy(QR, lista->nombrePropietario);
+				strcat(QR, "\n");
+				_itoa(lista->numeroCedula, cad1, 10);
+				strcat(QR, cad1);
+				strcat(QR, "FECHA DE ENTRADA\n");
+				strcat(QR, lista->fechaEntrada);
+				strcat(QR, "HORA DE ENTRADA\n");
+				strcat(QR, lista->horaEntrada);
+				strcat(QR, "FECHA DE SALIDA\n");
+				strcat(QR, lista->fechaSalida);
+				strcat(QR, "HORA DE SALIDA\n");
+				strcat(QR, lista->horaSalida);
+				strcat(QR, "\n");
+				strcat(QR, lista->placaAuto);
+				strcat(QR, "\n");
+				strcat(QR, lista->modeloAuto);
+				strcat(QR, "\n");
+				strcat(QR, "HORA O FRACCION");
+				generarQr(QR);
 			}
 		}
 		while (lista->siguienteDireccion != NULL) {
@@ -1041,6 +1269,26 @@ void calcularTarifa(ListaDoble lista, long ced, char* placa, int comp) {
 				fprintf(ticket, "\n*********************************************************");
 				fclose(ticket);
 				system("pause");
+				system("CLS");
+				strcpy(QR, lista->nombrePropietario);
+				strcat(QR, "\n");
+				_itoa(lista->numeroCedula, cad1, 10);
+				strcat(QR, cad1);
+				strcat(QR, "FECHA DE ENTRADA\n");
+				strcat(QR, lista->fechaEntrada);
+				strcat(QR, "HORA DE ENTRADA\n");
+				strcat(QR, lista->horaEntrada);
+				strcat(QR, "FECHA DE SALIDA\n");
+				strcat(QR, lista->fechaSalida);
+				strcat(QR, "HORA DE SALIDA\n");
+				strcat(QR, lista->horaSalida);
+				strcat(QR, "\n");
+				strcat(QR, lista->placaAuto);
+				strcat(QR, "\n");
+				strcat(QR, lista->modeloAuto);
+				strcat(QR, "\n");
+				strcat(QR, "HORA O FRACCION");
+				generarQr(QR);
 				return;
 			}
 		}
@@ -1118,21 +1366,33 @@ int salirParqueadero(ListaDoble lista) {
 }
 
 void imprimirLista(ListaDoble lista) {
+	FILE* datos;
+	fopen("LISTA PARQUEADERO.txt", "w+");
+	datos = fopen("LISTA PARQUEADERO.txt", "w+");
 	if (lista == NULL) {
 		printf("No hay elementos en la lista!\n\n");
 	}
 	else {
 		while (lista != NULL) {
 			printf("%s", lista->nombrePropietario);
+			fprintf(datos,"%s", lista->nombrePropietario);
 			printf("\n%d", lista->numeroCedula);
+			fprintf(datos,"\n%d", lista->numeroCedula);
 			printf("\n%s", lista->fechaEntrada);
+			fprintf(datos,"\n%s", lista->fechaEntrada);
 			printf("\n%s", lista->horaEntrada);
+			fprintf(datos,"\n%s", lista->horaEntrada);
 			printf("\n%s", lista->placaAuto);
+			fprintf(datos,"\n%s", lista->placaAuto);
 			printf("\n%s", lista->modeloAuto);
+			fprintf(datos,"\n%s", lista->modeloAuto);
 			printf("\n\n");
+			fprintf(datos,"\n\n");
 			lista = lista->siguienteDireccion;
+			
 		}
 	}
+	fclose(datos);
 }
 
 
@@ -1141,7 +1401,7 @@ int main()
 	ListaDoble lista = NULL;
 	Nodo *aux1 = new Nodo();
 	int opcionDelMenu, comp;
-inicio:
+	inicio:
 	opcionDelMenu = menu();
 	switch (opcionDelMenu) {
 	case 1: {
