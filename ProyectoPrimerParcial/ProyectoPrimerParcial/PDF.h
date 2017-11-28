@@ -1,6 +1,19 @@
 # ifndef PDF_H
 # define PDF_H
 #include"Librerias.h"
+#include <iostream>
+#include <Windows.h>
+#include <stdio.h>
+#include <conio.h>
+#include <stdlib.h>
+#include <time.h> 
+#include <string.h>
+#include <string>
+#include <MMsystem.h>
+#include <ctype.h>
+#include <fstream>
+#include <iomanip>
+#include"stdafx.h"
 
 //FUNCIONES PARA IMPRIMIR 
 void Outtextxy(HDC hdc, int x, int y, tstring Msg) {

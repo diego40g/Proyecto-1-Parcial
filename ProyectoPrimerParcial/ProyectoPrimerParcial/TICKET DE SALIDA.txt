@@ -3,9 +3,9 @@
 * NOMBRE CLIENTE: A			*
 * CEDULA DEL CLIENTE: 1723469712			*
 * FECHA DE ENTRADA: martes, 28 de noviembre de 2017	*
-* HORA DE ENTRADA: 14				*
+* HORA DE ENTRADA: 18				*
 * FECHA DE SALIDA: martes, 28 de noviembre de 2017	*
-* HORA DE SALIDA: 14				*
-* PLACA DEL VEHICULO: AAA-1111				*
+* HORA DE SALIDA: 18				*
+* PLACA DEL VEHICULO: PII-0789				*
 * VEHICULO: A					*
 *********************************************************

@@ -1,10 +1,10 @@
 *********************************************************
 *		TICKET DE ENTRADA			*
-* NOMBRE CLIENTE: B			*
+* NOMBRE CLIENTE: A			*
 * CEDULA DEL CLIENTE: 1723469712			*
 * FECHA DE ENTRADA: martes, 28 de noviembre de 2017	*
-* HORA DE ENTRADA: 16:12:45				*
-* PLACA DEL VEHICULO: BBB-1234				*
-* VEHICULO: B					*
+* HORA DE ENTRADA: 18:19:21				*
+* PLACA DEL VEHICULO: PII-0789				*
+* VEHICULO: A					*
 *		HORA O FRACCION				*
 *********************************************************

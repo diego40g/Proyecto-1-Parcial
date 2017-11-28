@@ -113,6 +113,7 @@
   <ItemGroup>
     <ClCompile Include="proyectoPrimerParcial1.cpp" />
     <ClCompile Include="qrcodegen.cpp" />
+    <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Librerias.h" />

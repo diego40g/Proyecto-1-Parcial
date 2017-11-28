@@ -286,7 +286,7 @@ int menu() {
 						  "INGRESAR AUTO AL FINAL DEL PARQUEADERO	",
 						  "INGRESAR AUTO ENTRE PARQUEADEROS			",
 						  "MOSTRAR LISTA DE AUTOS EN EL PARQUEADERO	",
-						  "AYUDA DEL PROGRAMA (esc)					",
+						  "AYUDA DEL PROGRAMA						",
 						  "IMAGEN DEL GRUPO							",
 						  "SALIR DEL PARQUEADERO					",
 						  "SALIR DEL SISTEMA						" };
@@ -1370,32 +1370,32 @@ int salirParqueadero(ListaDoble lista) {
 }
 
 void imprimirLista(ListaDoble lista) {
-	FILE *datos;
-	datos = fopen("LISTA PARQUEADERO.txt", "w+");
+	ofstream datos ("LISTA PARQUEADERO.txt");
 	if (lista == NULL) {
 		printf("No hay elementos en la lista!\n\n");
+		datos << "No hay elementos en la lista!\n\n" << endl;
 	}
 	else {
 		while (lista != NULL) {
 			printf("%s", lista->nombrePropietario);
-			fprintf(datos,"%s", lista->nombrePropietario);
+			datos<< lista->nombrePropietario<<endl;
 			printf("\n%d", lista->numeroCedula);
-			fprintf(datos,"\n%d", lista->numeroCedula);
+			datos<<"\n"<< lista->numeroCedula<<endl;
 			printf("\n%s", lista->fechaEntrada);
-			fprintf(datos,"\n%s", lista->fechaEntrada);
+			datos<<"\n"<< lista->fechaEntrada<<endl;
 			printf("\n%s", lista->horaEntrada);
-			fprintf(datos,"\n%s", lista->horaEntrada);
+			datos<<"\n"<< lista->horaEntrada<<endl;
 			printf("\n%s", lista->placaAuto);
-			fprintf(datos,"\n%s", lista->placaAuto);
+			datos<<"\n"<< lista->placaAuto<<endl;
 			printf("\n%s", lista->modeloAuto);
-			fprintf(datos,"\n%s", lista->modeloAuto);
+			datos<<"\n"<< lista->modeloAuto<<endl;
 			printf("\n\n");
-			fprintf(datos,"\n\n");
+			datos<<"\n\n"<<endl;
 			lista = lista->siguienteDireccion;
 		}
 	}
-	fclose(datos);
-
+	datos.close();
+	system("pause");
 	//PDF
 	int imp;
 	system("cls");
@@ -1406,9 +1406,10 @@ void imprimirLista(ListaDoble lista) {
 		LeerDatos.open("LISTA PARQUEADERO.txt", ios::out | ios::app);
 		tifstream in(TEXT("LISTA PARQUEADERO.txt"));
 		PrintFile(in);
-		ShellExecute(NULL, TEXT("open"), TEXT("LISTA PARQUEADERO.pdf"), NULL, NULL, SW_SHOWNORMAL);
+		ShellExecute(NULL, TEXT("open"), TEXT("D:\\Programacion 1\\C++\\Proyecto\\PDF QR\\pdf\\Datos.pdf"), NULL, NULL, SW_SHOWNORMAL);
 	}
 	system("pause");
+	_getch;
 }
 
 
@@ -1461,7 +1462,7 @@ int main()
 		break;
 	}
 	case 7: {
-
+		ShellExecute(NULL, TEXT("open"), TEXT("FotoGrupal.exe"), NULL, NULL, SW_SHOWNORMAL);
 		goto inicio;
 		break;
 	}
