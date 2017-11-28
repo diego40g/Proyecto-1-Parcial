@@ -1,7 +1,7 @@
-B
+
 1723469712
 martes, 28 de noviembre de 2017
-16:12:45
-BBB-1234
-B
+16:06:57
+AAA-0123
+A
 

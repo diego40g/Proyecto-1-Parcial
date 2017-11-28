@@ -1,7 +1,6 @@
+# ifndef PDF_H
+# define PDF_H
 #include"Librerias.h"
-//# ifndef HEADER_H
-# define HEADER_H
-
 
 //FUNCIONES PARA IMPRIMIR 
 void Outtextxy(HDC hdc, int x, int y, tstring Msg) {
@@ -63,3 +62,4 @@ void PrintFile(tifstream& f) {
 
 	ShowInformation(TEXT("La generación se realizo correctamente."));
 }
+# endif

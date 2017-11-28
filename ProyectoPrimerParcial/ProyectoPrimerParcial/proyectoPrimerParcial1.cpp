@@ -57,7 +57,6 @@ void gotoxy(int x, int y) {
 	dwPos.Y = y;
 	SetConsoleCursorPosition(hcon, dwPos);
 }
-
 void imprimirCar(int x)
 {
 	system("cls");
@@ -74,9 +73,7 @@ void imprimirCar(int x)
 	printf("/////////////////////////");
 	gotoxy(x, 14);
 	printf("   (  )            (  )");
-	system("cls");
 }
-
 void carrito()
 {
 	int x = 2, aux = 13;
@@ -95,9 +92,9 @@ void carrito()
 			x = 0;
 		}
 	}
+	system("cls");
 	printf("TOMAR EL TICK");
 }
-
 
 string convertir(char *c, int i) {
 	return string(*c, i);
@@ -114,14 +111,14 @@ ShellExecute(NULL, TEXT("open"), TEXT("ayuda.chm"), NULL, NULL, SW_SHOWNORMAL);
 ex = 'n';
 break;
 */
-int  AyudaF1(int car)//23 esc y 13 intro
+int  AyudaF1()//23 esc y 13 intro
 {
 	int x;
 	int imp;
 	printf("\nPresione Enter ");
 	for (;; ) {
 		x = _getch();//captura la tecla de función ,pertenece a la libreria conio.h
-		if (x == car)
+		if (x == 13)
 		{
 			imp = 1;
 			printf("\nGenerando...");
@@ -284,13 +281,20 @@ char* cedula() {
 }
 int menu() {
 	char c;
-	const char *fr[50] = { "INGRESAR PRIMER AUTO AL PARQUEADERO ","INGRESAR AUTO ALINICIO DEL PARQUEADERO ","INGRESAR AUTO AL FINAL DEL PARQUEADERO "
-		,"INGRESAR AUTO ENTRE PARQUEADEROS","MOSTRAR LISTA DE AUTOS EN EL PARQUEADERO","SALIR DEL PARQUEADERO ","SALIR DEL SISTEMA                    " };
+	const char *fr[50] = {"INGRESAR PRIMER AUTO AL PARQUEADERO		",
+						  "INGRESAR AUTO ALINICIO DEL PARQUEADERO	",
+						  "INGRESAR AUTO AL FINAL DEL PARQUEADERO	",
+						  "INGRESAR AUTO ENTRE PARQUEADEROS			",
+						  "MOSTRAR LISTA DE AUTOS EN EL PARQUEADERO	",
+						  "AYUDA DEL PROGRAMA (esc)					",
+						  "IMAGEN DEL GRUPO							",
+						  "SALIR DEL PARQUEADERO					",
+						  "SALIR DEL SISTEMA						" };
 	system("cls");
 	gotoxy(40, 1);
 	printf("MENU");
 	int y = 2, n;
-	for (int i = 1; i<8; i++) {
+	for (int i = 1; i<10; i++) {
 		if (i == 1) {
 			color(78);
 			gotoxy(20, y + i);
@@ -307,7 +311,7 @@ int menu() {
 		c = _getch();
 		gotoxy(20, y + 1);
 		color(07);
-		for (int i = y; i<9; i++) {
+		for (int i = y; i<11; i++) {
 			gotoxy(20, i + 1);
 			printf("%s", fr[i - 2]);
 		}
@@ -316,7 +320,7 @@ int menu() {
 			c = _getch();
 			if (c == 72) {
 				if (y == 2) {
-					y = 8;
+					y = 10;
 				}
 				else {
 					y--;
@@ -324,7 +328,7 @@ int menu() {
 
 			}
 			if (c == 80) {
-				if (y == 8) {
+				if (y == 10) {
 					y = 2;
 				}
 				else {
@@ -1366,8 +1370,7 @@ int salirParqueadero(ListaDoble lista) {
 }
 
 void imprimirLista(ListaDoble lista) {
-	FILE* datos;
-	fopen("LISTA PARQUEADERO.txt", "w+");
+	FILE *datos;
 	datos = fopen("LISTA PARQUEADERO.txt", "w+");
 	if (lista == NULL) {
 		printf("No hay elementos en la lista!\n\n");
@@ -1389,10 +1392,23 @@ void imprimirLista(ListaDoble lista) {
 			printf("\n\n");
 			fprintf(datos,"\n\n");
 			lista = lista->siguienteDireccion;
-			
 		}
 	}
 	fclose(datos);
+
+	//PDF
+	int imp;
+	system("cls");
+	imp = AyudaF1();
+	if (imp == 1)
+	{
+		ofstream LeerDatos;
+		LeerDatos.open("LISTA PARQUEADERO.txt", ios::out | ios::app);
+		tifstream in(TEXT("LISTA PARQUEADERO.txt"));
+		PrintFile(in);
+		ShellExecute(NULL, TEXT("open"), TEXT("LISTA PARQUEADERO.pdf"), NULL, NULL, SW_SHOWNORMAL);
+	}
+	system("pause");
 }
 
 
@@ -1440,6 +1456,16 @@ int main()
 		break;
 	}
 	case 6: {
+		ShellExecute(NULL, TEXT("open"), TEXT("ayuda.chm"), NULL, NULL, SW_SHOWNORMAL);
+		goto inicio;
+		break;
+	}
+	case 7: {
+
+		goto inicio;
+		break;
+	}
+	case 8: {
 		comp = 0;
 		system("cls");
 		comp = salirParqueadero(lista);
@@ -1475,13 +1501,11 @@ int main()
 				lista = lista->anteriorDireccion;
 			}
 		}
-
-
 		system("pause");
 		goto inicio;
 		break;
 	}
-	case 7: {
+	case 9: {
 		return 0;
 		break;
 	}
