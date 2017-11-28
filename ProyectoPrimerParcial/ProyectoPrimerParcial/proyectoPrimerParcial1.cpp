@@ -4,25 +4,31 @@ PROYECTO PRIMER PARCIAL
 INTEGRANTES: MICHAEL MORALES, DIEGO PAZ
 PROFESOR: FERNANDO SOLIS
 */
+//PERMITE UTILIZAR FUNCIONES COMO strcpy()
+#define _CRT_SECURE_NO_WARNINGS
+/*#ifdef _MSC_VER
+#define _CTR_SECURE_NO_WARNINGS
+#endif*/
 #include<iostream>
 #include<stdio.h>
 #include<string.h>
 #include<conio.h>
 #include<stdlib.h>
 #include<windows.h>
-#include<string.h>
+#include<string>
 #include<time.h>
+using namespace std;
 
 struct Nodo {
-	char horaEntrada[30];
-	char fechaEntrada[50];
-	char horaSalida[30];
-	char fechaSalida[50];
+	char horaEntrada[11];
+	char fechaEntrada[35];
+	char horaSalida[11];
+	char fechaSalida[35];
 	long numeroCedula;
 	char modeloAuto[10];
 	float tarifaPagar;
-	char nombrePropietario[50];
-	char placaAuto[8];
+	char nombrePropietario[15];
+	char placaAuto[10];
 	struct Nodo *siguienteDireccion;
 	struct Nodo *anteriorDireccion;
 };
@@ -43,43 +49,54 @@ void gotoxy(int x, int y) {
 	dwPos.Y = y;
 	SetConsoleCursorPosition(hcon, dwPos);
 }
-void letras(char *validar) {
+string convertir(char *c, int i) {
+	return string(*c, i);
+}
+char* covertStringChar(string cadena) {
+	char* aux = new char[cadena.size()];
+	strcpy(aux, cadena.c_str());
+	return aux;
+}
+void letras(char* val) {
 	int c, i = 0;
 	i = 0;
 	while ((c = _getch()) != 13) {
-		if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122) || c == 32) {
-			*(validar + i) = c;
+		if ((c >= 65 && c <= 90) ||  c == 32) {
+			*(val + i) = c;
 			printf("%c", c);
 			i++;
 		}
+		*(val + i) = '\0';
 	}
+
 	return;
 }
-void numeros(char *validar) {
+void numeros(char* val) {
 	int c, i = 0;
 	i = 0;
 	while ((c = _getch()) != 13) {
 		if ((c >= 48 && c <= 57)) {
 
-			*(validar + i) = c;
+			*(val + i) = c;
 			printf("%c", c);
 			i++;
 		}
+		*(val + i) = '\0';
 	}
 }
-void flotantes(char *validar) {
+void flotantes(char* val) {
 	int c, i = 0;
 	i = 0;
 	while ((c = _getch()) != 13) {
 		if ((c >= 48 && c <= 57) || c == 46) {
 
-			*(validar + i) = c;
+			*(val + i) = c;
 			printf("%c", c);
 			i++;
 		}
+		*(val + i) = '\0';
 	}
 }
-
 void ingresar(char *ced) {
 	int  i = 0, asc = 48, num = 0;
 	do {
@@ -111,9 +128,9 @@ int cambio(int a, int asc, int num) {
 int verificar(char *d) {
 	int sum = 0, mult = 0, sum1 = 0, sum2 = 0, tot = 0, asc = 48, num = 0;
 
-	int* c;
-	c = (int*)malloc(10 * sizeof(int));
-
+	//int* c;
+	//	c = (int*)malloc(10 * sizeof(int));
+	int c[10];
 	for (int i = 0; i<10; i++) {
 		*(c + i) = cambio(*(d + i), asc, num);
 	}
@@ -152,7 +169,6 @@ void imprimir(int a) {
 		printf("la cedula es incorrecta");
 	}
 }
-
 char* cedula() {
 
 	int a;
@@ -169,11 +185,10 @@ char* cedula() {
 	return ced;
 
 }
-
 int menu() {
 	char c;
 	const char *fr[50] = { "INGRESAR PRIMER AUTO AL PARQUEADERO ","INGRESAR AUTO ALINICIO DEL PARQUEADERO ","INGRESAR AUTO AL FINAL DEL PARQUEADERO "
-		,"INGRESAR AUTO ENTRE PARQUEADEROS","MOSTRAR AUTOS EN ELPARQUEADERO","SALIR DEL PARQUEADERO ","SALIR DEL SISTEMA                    " };
+		,"INGRESAR AUTO ENTRE PARQUEADEROS","MOSTRAR LISTA DE AUTOS EN EL PARQUEADERO","SALIR DEL PARQUEADERO ","SALIR DEL SISTEMA                    " };
 	system("cls");
 	gotoxy(40, 1);
 	printf("MENU");
@@ -232,78 +247,158 @@ int menu() {
 	} while (1);
 	return n;
 }
-
 void ingresarPrimerDato(ListaDoble &lista) {
-	
+	FILE *ticket;
 	Nodo *aux = new Nodo();
+	char *modeloAuto = (char*)malloc(10 * sizeof(char));
+	char *nombrePropietario = (char*)malloc(15 * sizeof(char));
+	char *placaAuto = (char*)malloc(10 * sizeof(char));
+	char *letrasPlaca = (char*)malloc(3 * sizeof(char));
+	char *numerosPlaca = (char*)malloc(4 * sizeof(char));
+	if (lista == NULL) {
+	aux->numeroCedula = atoi(cedula());
+	printf("\nINGRESE NOMBRE DEL PROPIETARIO:");
+	letras(aux->nombrePropietario);
+	printf("\nINGRESE PLACA");
+	do {
+		printf("\nINGRESE LETRAS DE LA PLACA:");
+		letras(letrasPlaca);
+	} while (strlen(letrasPlaca) < 3 || strlen(letrasPlaca) > 3);
+	strcpy(aux->placaAuto, letrasPlaca);
+	strcat(aux->placaAuto, "-");
+	do {
+		printf("\nINGRESE NUMEROS DE LA PLACA:");
+		printf("\nSI SU PLACA TIENE TRES NUMEROS ANTEPONGA EL NUMERO 0\n");
+		numeros(numerosPlaca);
+	} while (strlen(numerosPlaca) < 4 || strlen(numerosPlaca) > 4);
+	strcat(aux->placaAuto, numerosPlaca);
+	printf("\nINGRESE MODELO DEL AUTO: ");
+	letras(aux->modeloAuto);
+	GetDateFormat(LOCALE_USER_DEFAULT, DATE_LONGDATE, NULL, NULL, aux->fechaEntrada, 35);
+	GetTimeFormat(LOCALE_USER_DEFAULT, TIME_FORCE24HOURFORMAT, NULL, NULL, aux->horaEntrada, 11);
+	aux->anteriorDireccion = aux->siguienteDireccion = NULL;
+	lista = aux;
+	fopen("TICKET DE ENTRADA.txt", "w");
+	system("cls");
+	ticket = fopen("TICKET DE ENTRADA.txt", "w");
+	printf("*****************************************************");
+	gotoxy(18, 1);
+	printf("TICKET DE ENTRADA");
+	gotoxy(0, 1);
+	printf("*");
+	gotoxy(52, 1);
+	printf("*");
+	gotoxy(0, 2);
+	printf("* NOMBRE CLIENTE: %s", aux->nombrePropietario);
+	gotoxy(52, 2);
+	printf("*");
+	gotoxy(0, 3);
+	printf("* CEDULA DEL CLIENTE: %d", aux->numeroCedula);
+	gotoxy(52, 3);
+	printf("*");
+	gotoxy(0, 4);
+	printf("* FECHA DE ENTRADA: %s", aux->fechaEntrada);
+	gotoxy(52, 4);
+	printf("*");
+	gotoxy(0, 5);
+	printf("* HORA DE ENTRADA: %s", aux->horaEntrada);
+	gotoxy(52, 5);
+	printf("*");
+	gotoxy(0, 6);
+	printf("* PLACA DEL VEHICULO: %s", aux->placaAuto);
+	gotoxy(52, 6);
+	printf("*");
+	gotoxy(0, 7);
+	printf("* VEHICULO: %s", aux->modeloAuto);
+	gotoxy(52, 7);
+	printf("*");
+	gotoxy(18, 8);
+	printf("HORA O FRACCION");
+	gotoxy(0, 8);
+	printf("*");
+	gotoxy(52, 8);
+	printf("*");
+	gotoxy(0, 9);
+	printf("*****************************************************\n");
+	fprintf(ticket, "*********************************************************");
+	fprintf(ticket, "\n*\t\tTICKET DE ENTRADA\t\t\t*");
+	fprintf(ticket, "\n* NOMBRE CLIENTE: %s\t\t\t*", aux->nombrePropietario);
+	fprintf(ticket, "\n* CEDULA DEL CLIENTE: %d\t\t\t*", aux->numeroCedula);
+	fprintf(ticket, "\n* FECHA DE ENTRADA: %s\t*", aux->fechaEntrada);
+	fprintf(ticket, "\n* HORA DE ENTRADA: %s\t\t\t\t*", aux->horaEntrada);
+	fprintf(ticket, "\n* PLACA DEL VEHICULO: %s\t\t\t\t*", aux->placaAuto);
+	fprintf(ticket, "\n* VEHICULO: %s\t\t\t\t\t*", aux->modeloAuto);
+	fprintf(ticket, "\n*\t\tHORA O FRACCION\t\t\t\t*");
+	fprintf(ticket, "\n*********************************************************");
+	fclose(ticket);
+	}
+	else {
+		printf("\nEL PRIMER VEHICULO YA ESTA EN EL PARQUEADERO\n");
+	}
+
+}
+void ingresarUltimaPosicion(ListaDoble &lista) {
+	FILE *ticket;
+	Placas placa;
+	Nodo *aux2 = lista, *aux = new Nodo();
+
 	char *letrasPlaca = (char*)malloc(3 * sizeof(char));
 	//char letrasPlaca[3], numeroPlaca[4], fecha[50], hora[30];
 	char *numeroPlaca = (char*)malloc(4 * sizeof(char));
-	char plac[30];
-	char *fecha=(char*)malloc(50*sizeof(char));
-	char *hora= (char*)malloc(30 * sizeof(char));;
-	Placas placa;
 
-	aux->numeroCedula = atoi(cedula());
-	printf("\nINGRESE NOMBRE DEL PROPIETARIO:");
-	//fflush(stdin);
-	letras(aux->nombrePropietario);
-	printf("\nINGRESE PLACA");
-	printf("\nINGRESE LETRAS DE LA PLACA:");
-	//fflush(stdin);
-	letras(letrasPlaca);
-	//fflush(stdin);
-	//strcpy_s(aux->placaAuto, strlen(letrasPlaca)+1, letrasPlaca);
-	//strcpy_s(aux->placaAuto[10], letrasPlaca);
-	//strcpy_s((&aux->placaAuto)[3], letrasPlaca);
+	char *fecha = (char*)malloc(50 * sizeof(char));
+	char *hora = (char*)malloc(30 * sizeof(char));;
 
-	strcat_s(aux->placaAuto, sizeof aux->placaAuto, letrasPlaca);
-	printf("\nSI PASO");
-	//fflush(stdin);
-	strcat_s(aux->placaAuto, sizeof aux->placaAuto, "-");
-	//fflush(stdin);
-	printf("\nINGRESE NUMEROS DE LA PLACA:");
-	numeros(numeroPlaca);
-	//fflush(stdin);
-	strcat_s(aux->placaAuto, sizeof aux->placaAuto, numeroPlaca);
-	printf("\nINGRESE MODELO DEL AUTO: ");
-	letras(aux->modeloAuto);
-	GetDateFormat(LOCALE_USER_DEFAULT, DATE_LONGDATE, NULL, NULL, aux->fechaEntrada, 50);
-	GetTimeFormat(LOCALE_USER_DEFAULT, TIME_FORCE24HOURFORMAT, NULL, NULL, aux->horaEntrada, 30);
-	aux->anteriorDireccion = aux->siguienteDireccion = NULL;
-	lista = aux;
-}
-void ingresarUltimaPosicion(ListaDoble &lista) {
-	Placas placa;
-	Nodo *aux2=lista, *aux = new Nodo();
-	
-	char *letrasPlaca=(char*)malloc(3*sizeof(char));
-	//char letrasPlaca[3], numeroPlaca[4], fecha[50], hora[30];
-	char *numeroPlaca = (char*)malloc(4 * sizeof(char));
-
-	char *fecha=(char*)malloc(50*sizeof(char));
-	char *hora= (char*)malloc(30 * sizeof(char));;
-	
 	if (lista != NULL) {
-		
+
 		aux->numeroCedula = atoi(cedula());
 		printf("\nINGRESE NOMBRE DEL PROPIETARIO:");
 		//fflush(stdin);
 		letras(aux->nombrePropietario);
 		printf("\nINGRESE PLACA");
-		printf("\nINGRESE LETRAS DE LA PLACA:");
-		//fflush(stdin);
-		letras(letrasPlaca);
-		//fflush(stdin);
-		strcpy_s(aux->placaAuto, strlen(letrasPlaca) + 1, letrasPlaca);
+		do {
+			printf("\nINGRESE LETRAS DE LA PLACA:");
+			letras(letrasPlaca);
+		} while (strlen(letrasPlaca) < 3 || strlen(letrasPlaca) > 3);
+		strcpy(aux->placaAuto, letrasPlaca);
+		strcat(aux->placaAuto, "-");
+		do {
+			printf("\nINGRESE NUMEROS DE LA PLACA:");
+			printf("\nSI SU PLACA TIENE TRES NUMEROS ANTEPONGA EL NUMERO 0\n");
+			numeros(numeroPlaca);
+		} while (strlen(numeroPlaca) < 4 || strlen(numeroPlaca) > 4);
+		strcat(aux->placaAuto, numeroPlaca);
+		if (lista->siguienteDireccion == NULL) {
+			if (strcmp(lista->placaAuto, aux->placaAuto) == 0) {
+				printf("\nEL AUTO NO PUEDE INGRESAR PUES YA ESTA DENTRO DEL PARQUEADERO");
+				return;
+			}
+		}
+		if (lista->siguienteDireccion != NULL) {
 
-		//fflush(stdin);
-		strcat_s(aux->placaAuto, sizeof aux->placaAuto, "-");
-		//fflush(stdin);
-		printf("\nINGRESE NUMEROS DE LA PLACA:");
-		numeros(numeroPlaca);
-		//fflush(stdin);
-		strcat_s(aux->placaAuto, sizeof aux->placaAuto, numeroPlaca);
+			while (lista->siguienteDireccion != NULL) {
+				if (strcmp(lista->placaAuto, aux->placaAuto) == 0) {
+					printf("\nEL AUTO NO PUEDE INGRESAR PUES YA ESTA DENTRO DEL PARQUEADERO");
+					while (lista->anteriorDireccion != NULL) {
+						lista = lista->anteriorDireccion;
+					}
+					return;
+				}
+				lista = lista->siguienteDireccion;
+				if (lista->siguienteDireccion == NULL) {
+					if (strcmp(lista->placaAuto, aux->placaAuto) == 0) {
+						printf("\nEL AUTO NO PUEDE INGRESAR PUES YA ESTA DENTRO DEL PARQUEADERO");
+						while (lista->anteriorDireccion != NULL) {
+							lista = lista->anteriorDireccion;
+						}
+						return;
+					}
+				}
+			}
+		}
+		while (lista->anteriorDireccion != NULL) {
+			lista = lista->anteriorDireccion;
+		}
 		printf("\nINGRESE MODELO DEL AUTO: ");
 		letras(aux->modeloAuto);
 		GetDateFormat(LOCALE_USER_DEFAULT, DATE_LONGDATE, NULL, NULL, aux->fechaEntrada, 50);
@@ -316,40 +411,124 @@ void ingresarUltimaPosicion(ListaDoble &lista) {
 		aux2->siguienteDireccion = aux;
 		aux->anteriorDireccion = aux2;
 		printf("\nDATO INGRESADO!");
+		fopen("TICKET DE ENTRADA.txt", "w");
+		system("cls");
+		ticket = fopen("TICKET DE ENTRADA.txt", "w");
+		printf("*****************************************************");
+		gotoxy(18, 1);
+		printf("TICKET DE ENTRADA");
+		gotoxy(0, 1);
+		printf("*");
+		gotoxy(52, 1);
+		printf("*");
+		gotoxy(0, 2);
+		printf("* NOMBRE CLIENTE: %s", aux->nombrePropietario);
+		gotoxy(52, 2);
+		printf("*");
+		gotoxy(0, 3);
+		printf("* CEDULA DEL CLIENTE: %d", aux->numeroCedula);
+		gotoxy(52, 3);
+		printf("*");
+		gotoxy(0, 4);
+		printf("* FECHA DE ENTRADA: %s", aux->fechaEntrada);
+		gotoxy(52, 4);
+		printf("*");
+		gotoxy(0, 5);
+		printf("* HORA DE ENTRADA: %s", aux->horaEntrada);
+		gotoxy(52, 5);
+		printf("*");
+		gotoxy(0, 6);
+		printf("* PLACA DEL VEHICULO: %s", aux->placaAuto);
+		gotoxy(52, 6);
+		printf("*");
+		gotoxy(0, 7);
+		printf("* VEHICULO: %s", aux->modeloAuto);
+		gotoxy(52, 7);
+		printf("*");
+		gotoxy(18, 8);
+		printf("HORA O FRACCION");
+		gotoxy(0, 8);
+		printf("*");
+		gotoxy(52, 8);
+		printf("*");
+		gotoxy(0, 9);
+		printf("*****************************************************\n");
+		fprintf(ticket, "*********************************************************");
+		fprintf(ticket, "\n*\t\tTICKET DE ENTRADA\t\t\t*");
+		fprintf(ticket, "\n* NOMBRE CLIENTE: %s\t\t\t*", aux->nombrePropietario);
+		fprintf(ticket, "\n* CEDULA DEL CLIENTE: %d\t\t\t*", aux->numeroCedula);
+		fprintf(ticket, "\n* FECHA DE ENTRADA: %s\t*", aux->fechaEntrada);
+		fprintf(ticket, "\n* HORA DE ENTRADA: %s\t\t\t\t*", aux->horaEntrada);
+		fprintf(ticket, "\n* PLACA DEL VEHICULO: %s\t\t\t\t*", aux->placaAuto);
+		fprintf(ticket, "\n* VEHICULO: %s\t\t\t\t\t*", aux->modeloAuto);
+		fprintf(ticket, "\n*\t\tHORA O FRACCION\t\t\t\t*");
+		fprintf(ticket, "\n*********************************************************");
+		fclose(ticket);
 	}
 	else {
 		printf("\nDEBE INGRESAR EL PRIMER ELEMENTO!!\n");
 	}
 }
 void ingresarPrimeraPosicion(ListaDoble &lista) {
+	FILE *ticket;
 	Nodo *aux = new Nodo(), *aux2 = lista;
 	Placas placa;
-	char *letrasPlaca=(char*)malloc(3*sizeof(char));
+	char *letrasPlaca = (char*)malloc(3 * sizeof(char));
 	//char letrasPlaca[3], numeroPlaca[4], fecha[50], hora[30];
 	char *numeroPlaca = (char*)malloc(4 * sizeof(char));
 
-	char *fecha=(char*)malloc(50*sizeof(char));
-	char *hora= (char*)malloc(30 * sizeof(char));;
+	char *fecha = (char*)malloc(50 * sizeof(char));
+	char *hora = (char*)malloc(30 * sizeof(char));;
 	if (lista != NULL) {
-		
+
 		aux->numeroCedula = atoi(cedula());
-		printf("\nINGRESE NOMBRE DEL PROPIETARIO:");
+		printf("\nINGRESE NOMBRE DEL PROPIETARIO DEL AUTO:");
 		//fflush(stdin);
 		letras(aux->nombrePropietario);
 		printf("\nINGRESE PLACA");
-		printf("\nINGRESE LETRAS DE LA PLACA:");
-		//fflush(stdin);
-		letras(letrasPlaca);
-		//fflush(stdin);
-		strcpy_s(aux->placaAuto, strlen(letrasPlaca) + 1, letrasPlaca);
+		do {
+			printf("\nINGRESE LETRAS DE LA PLACA:");
+			letras(letrasPlaca);
+		} while (strlen(letrasPlaca) <3 || strlen(letrasPlaca)>3);
+		strcpy(aux->placaAuto, letrasPlaca);
+		strcat(aux->placaAuto, "-");
+		do {
+			printf("\nINGRESE NUMEROS DE LA PLACA:");
+			printf("\nSI SU PLACA TIENE TRES NUMEROS ANTEPONGA EL NUMERO 0\n");
+			numeros(numeroPlaca);
+		} while (strlen(numeroPlaca) < 4 || strlen(numeroPlaca) > 4);
+		strcat(aux->placaAuto, numeroPlaca);
+		if (lista->siguienteDireccion == NULL) {
+			if (strcmp(lista->placaAuto, aux->placaAuto) == 0) {
+				printf("\nEL AUTO NO PUEDE INGRESAR PUES YA ESTA DENTRO DEL PARQUEADERO");
+				return;
+			}
+		}
+		if(lista->siguienteDireccion!=NULL) {
 
-		//fflush(stdin);
-		strcat_s(aux->placaAuto, sizeof aux->placaAuto, "-");
-		//fflush(stdin);
-		printf("\nINGRESE NUMEROS DE LA PLACA:");
-		numeros(numeroPlaca);
-		//fflush(stdin);
-		strcat_s(aux->placaAuto, sizeof aux->placaAuto, numeroPlaca);
+			while (lista->siguienteDireccion != NULL) {
+				if (strcmp(lista->placaAuto, aux->placaAuto) == 0) {
+					printf("\nEL AUTO NO PUEDE INGRESAR PUES YA ESTA DENTRO DEL PARQUEADERO");
+					while (lista->anteriorDireccion != NULL) {
+						lista = lista->anteriorDireccion;
+					}
+					return;
+				}
+				lista = lista->siguienteDireccion;
+				if (lista->siguienteDireccion == NULL) {
+					if (strcmp(lista->placaAuto, aux->placaAuto) == 0) {
+						printf("\nEL AUTO NO PUEDE INGRESAR PUES YA ESTA DENTRO DEL PARQUEADERO");
+						while (lista->anteriorDireccion != NULL) {
+							lista = lista->anteriorDireccion;
+						}
+						return;
+					}
+				}
+			}
+		}
+		while (lista->anteriorDireccion != NULL) {
+			lista = lista->anteriorDireccion;
+		}
 		printf("\nINGRESE MODELO DEL AUTO: ");
 		letras(aux->modeloAuto);
 		GetDateFormat(LOCALE_USER_DEFAULT, DATE_LONGDATE, NULL, NULL, aux->fechaEntrada, 50);
@@ -359,19 +538,73 @@ void ingresarPrimeraPosicion(ListaDoble &lista) {
 		lista->anteriorDireccion = aux;
 		lista = aux;
 		printf("\nDATO INGRESADO!!!\n");
+		fopen("TICKET DE ENTRADA.txt", "w");
+		system("cls");
+		ticket = fopen("TICKET DE ENTRADA.txt", "w");
+		printf("*****************************************************");
+		gotoxy(18, 1);
+		printf("TICKET DE ENTRADA");
+		gotoxy(0, 1);
+		printf("*");
+		gotoxy(52, 1);
+		printf("*");
+		gotoxy(0, 2);
+		printf("* NOMBRE CLIENTE: %s", aux->nombrePropietario);
+		gotoxy(52, 2);
+		printf("*");
+		gotoxy(0, 3);
+		printf("* CEDULA DEL CLIENTE: %d", aux->numeroCedula);
+		gotoxy(52, 3);
+		printf("*");
+		gotoxy(0, 4);
+		printf("* FECHA DE ENTRADA: %s", aux->fechaEntrada);
+		gotoxy(52, 4);
+		printf("*");
+		gotoxy(0, 5);
+		printf("* HORA DE ENTRADA: %s", aux->horaEntrada);
+		gotoxy(52, 5);
+		printf("*");
+		gotoxy(0, 6);
+		printf("* PLACA DEL VEHICULO: %s", aux->placaAuto);
+		gotoxy(52, 6);
+		printf("*");
+		gotoxy(0, 7);
+		printf("* VEHICULO: %s", aux->modeloAuto);
+		gotoxy(52, 7);
+		printf("*");
+		gotoxy(18, 8);
+		printf("HORA O FRACCION");
+		gotoxy(0, 8);
+		printf("*");
+		gotoxy(52, 8);
+		printf("*");
+		gotoxy(0, 9);
+		printf("*****************************************************\n");
+		fprintf(ticket, "*********************************************************");
+		fprintf(ticket, "\n*\t\tTICKET DE ENTRADA\t\t\t*");
+		fprintf(ticket, "\n* NOMBRE CLIENTE: %s\t\t\t*", aux->nombrePropietario);
+		fprintf(ticket, "\n* CEDULA DEL CLIENTE: %d\t\t\t*", aux->numeroCedula);
+		fprintf(ticket, "\n* FECHA DE ENTRADA: %s\t*", aux->fechaEntrada);
+		fprintf(ticket, "\n* HORA DE ENTRADA: %s\t\t\t\t*", aux->horaEntrada);
+		fprintf(ticket, "\n* PLACA DEL VEHICULO: %s\t\t\t\t*", aux->placaAuto);
+		fprintf(ticket, "\n* VEHICULO: %s\t\t\t\t\t*", aux->modeloAuto);
+		fprintf(ticket, "\n*\t\tHORA O FRACCION\t\t\t\t*");
+		fprintf(ticket, "\n*********************************************************");
+		fclose(ticket);
 	}
 	else {
 		printf("\nDEBE INGRESAR EL PRIMER ELEMENTO!!\n");
 	}
 }
 void ingresarEntre(ListaDoble lista) {
+	FILE *ticket;
 	Placas placa;
-	char *letrasPlaca=(char*)malloc(3*sizeof(char));
+	char *letrasPlaca = (char*)malloc(3 * sizeof(char));
 	//char letrasPlaca[3], numeroPlaca[4], fecha[50], hora[30];
 	char *numeroPlaca = (char*)malloc(4 * sizeof(char));
 
-	char *fecha=(char*)malloc(50*sizeof(char));
-	char *hora= (char*)malloc(30 * sizeof(char));;
+	char *fecha = (char*)malloc(50 * sizeof(char));
+	char *hora = (char*)malloc(30 * sizeof(char));;
 	system("pause");
 	Nodo *aux2 = lista;
 	Nodo *aux = new Nodo();
@@ -382,11 +615,12 @@ void ingresarEntre(ListaDoble lista) {
 	if (lista != NULL) {
 		int iterador = 1, bandera = 0;
 		if (posicion == 0) {
+			printf("\nUSTED INGRESARA AL INICIO DE LA LISTA\n");
 			ingresarPrimeraPosicion(lista);
 		}
 		else {
 
-			
+
 			while (aux2->siguienteDireccion != NULL) {
 				if (posicion == iterador) {
 					aux->numeroCedula = atoi(cedula());
@@ -394,19 +628,49 @@ void ingresarEntre(ListaDoble lista) {
 					//fflush(stdin);
 					letras(aux->nombrePropietario);
 					printf("\nINGRESE PLACA");
-					printf("\nINGRESE LETRAS DE LA PLACA:");
-					//fflush(stdin);
-					letras(letrasPlaca);
-					//fflush(stdin);
-					strcpy_s(aux->placaAuto, strlen(letrasPlaca) + 1, letrasPlaca);
+					do {
+						printf("\nINGRESE LETRAS DE LA PLACA:");
+						letras(letrasPlaca);
+					} while (strlen(letrasPlaca) < 3 || strlen(letrasPlaca) > 3);
+					strcpy(aux->placaAuto, letrasPlaca);
+					strcat(aux->placaAuto, "-");
+					do {
+						printf("\nINGRESE NUMEROS DE LA PLACA:");
+						printf("\nSI SU PLACA TIENE TRES NUMEROS ANTEPONGA EL NUMERO 0\n");
+						numeros(numeroPlaca);
+					} while (strlen(numeroPlaca) < 4 || strlen(numeroPlaca) > 4);
+					strcat(aux->placaAuto, numeroPlaca);
+					if (lista->siguienteDireccion == NULL) {
+						if (strcmp(lista->placaAuto, aux->placaAuto) == 0) {
+							printf("\nEL AUTO NO PUEDE INGRESAR PUES YA ESTA DENTRO DEL PARQUEADERO");
+							return;
+						}
+					}
+					if (lista->siguienteDireccion != NULL) {
 
-					//fflush(stdin);
-					strcat_s(aux->placaAuto, sizeof aux->placaAuto, "-");
-					//fflush(stdin);
-					printf("\nINGRESE NUMEROS DE LA PLACA:");
-					numeros(numeroPlaca);
-					//fflush(stdin);
-					strcat_s(aux->placaAuto, sizeof aux->placaAuto, numeroPlaca);
+						while (lista->siguienteDireccion != NULL) {
+							if (strcmp(lista->placaAuto, aux->placaAuto) == 0) {
+								printf("\nEL AUTO NO PUEDE INGRESAR PUES YA ESTA DENTRO DEL PARQUEADERO");
+								while (lista->anteriorDireccion != NULL) {
+									lista = lista->anteriorDireccion;
+								}
+								return;
+							}
+							lista = lista->siguienteDireccion;
+							if (lista->siguienteDireccion == NULL) {
+								if (strcmp(lista->placaAuto, aux->placaAuto) == 0) {
+									printf("\nEL AUTO NO PUEDE INGRESAR PUES YA ESTA DENTRO DEL PARQUEADERO");
+									while (lista->anteriorDireccion != NULL) {
+										lista = lista->anteriorDireccion;
+									}
+									return;
+								}
+							}
+						}
+					}
+					while (lista->anteriorDireccion != NULL) {
+						lista = lista->anteriorDireccion;
+					}
 					printf("\nINGRESE MODELO DEL AUTO: ");
 					letras(aux->modeloAuto);
 					GetDateFormat(LOCALE_USER_DEFAULT, DATE_LONGDATE, NULL, NULL, aux->fechaEntrada, 50);
@@ -415,6 +679,60 @@ void ingresarEntre(ListaDoble lista) {
 					aux2->siguienteDireccion = aux;
 					aux->anteriorDireccion = aux2;
 					aux->siguienteDireccion->anteriorDireccion = aux;
+					printf("\nSE INSERTo ENTRE %d y %d", posicion, posicion + 1);
+					fopen("TICKET DE ENTRADA.txt", "w");
+					system("cls");
+					ticket = fopen("TICKET DE ENTRADA.txt", "w");
+					printf("*****************************************************");
+					gotoxy(18, 1);
+					printf("TICKET DE ENTRADA");
+					gotoxy(0, 1);
+					printf("*");
+					gotoxy(52, 1);
+					printf("*");
+					gotoxy(0, 2);
+					printf("* NOMBRE CLIENTE: %s", aux->nombrePropietario);
+					gotoxy(52, 2);
+					printf("*");
+					gotoxy(0, 3);
+					printf("* CEDULA DEL CLIENTE: %d", aux->numeroCedula);
+					gotoxy(52, 3);
+					printf("*");
+					gotoxy(0, 4);
+					printf("* FECHA DE ENTRADA: %s", aux->fechaEntrada);
+					gotoxy(52, 4);
+					printf("*");
+					gotoxy(0, 5);
+					printf("* HORA DE ENTRADA: %s", aux->horaEntrada);
+					gotoxy(52, 5);
+					printf("*");
+					gotoxy(0, 6);
+					printf("* PLACA DEL VEHICULO: %s", aux->placaAuto);
+					gotoxy(52, 6);
+					printf("*");
+					gotoxy(0, 7);
+					printf("* VEHICULO: %s", aux->modeloAuto);
+					gotoxy(52, 7);
+					printf("*");
+					gotoxy(18, 8);
+					printf("HORA O FRACCION");
+					gotoxy(0, 8);
+					printf("*");
+					gotoxy(52, 8);
+					printf("*");
+					gotoxy(0, 9);
+					printf("*****************************************************\n");
+					fprintf(ticket, "*********************************************************");
+					fprintf(ticket, "\n*\t\tTICKET DE ENTRADA\t\t\t*");
+					fprintf(ticket, "\n* NOMBRE CLIENTE: %s\t\t\t*", aux->nombrePropietario);
+					fprintf(ticket, "\n* CEDULA DEL CLIENTE: %d\t\t\t*", aux->numeroCedula);
+					fprintf(ticket, "\n* FECHA DE ENTRADA: %s\t*", aux->fechaEntrada);
+					fprintf(ticket, "\n* HORA DE ENTRADA: %s\t\t\t\t*", aux->horaEntrada);
+					fprintf(ticket, "\n* PLACA DEL VEHICULO: %s\t\t\t\t*", aux->placaAuto);
+					fprintf(ticket, "\n* VEHICULO: %s\t\t\t\t\t*", aux->modeloAuto);
+					fprintf(ticket, "\n*\t\tHORA O FRACCION\t\t\t\t*");
+					fprintf(ticket, "\n*********************************************************");
+					fclose(ticket);
 					//	printf("\n\nDATO INGRESADO!\n\n");
 					while (aux2->anteriorDireccion != NULL) {
 						aux2 = aux2->anteriorDireccion;
@@ -439,14 +757,291 @@ void ingresarEntre(ListaDoble lista) {
 			//}
 		}
 	}
-	printf("\nSE INSERTo ENTRE %d y %d", posicion, posicion + 1);
+	else {
+		printf("\nDEBE INGRESAR EL PRIMER ELEMENTO!!\n");
+	}
+	
 }
-
-/*float calcularTarifa(ListaDoble lista, long ced, char* placa) {
+void calcularTarifa(ListaDoble lista, long ced, char* placa, int comp) {
+	FILE *ticket;
 	if (lista != NULL) {
+		if (comp == 0) {
+			printf("\nNOEXISTE NINGUN VEHICULO INGRESADO\n!!!");
+			return;
+		}
+		if (comp == 1) {
+			if (ced == lista->numeroCedula && strcmp(placa, lista->placaAuto) == 0) {
+				GetDateFormat(LOCALE_USER_DEFAULT, DATE_LONGDATE, NULL, NULL, lista->fechaSalida, 35);
+				GetTimeFormat(LOCALE_USER_DEFAULT, TIME_FORCE24HOURFORMAT, NULL, NULL, lista->horaSalida, 11);
+				int horasEnteroEntrada, minutosEnteroEntrada, segundosEnteroEntrada, i = 0;
+				int horasEnteroSalida, minutosEnteroSalida, segundosEnteroSalida;
+				char *horasEntrada, *minutosEntrada, *segundosEntrada, *horasSalida, *minutosSalida, *segundosSalida;
+				char *aux = lista->horaEntrada, *aux1 = lista->horaSalida;
+				while (i<1) {
+					horasEntrada = strtok(aux, ":");
+					minutosEntrada = strtok(NULL, ":");
+					segundosEntrada = strtok(NULL, ":");
+					horasEnteroEntrada = atoi(horasEntrada);
+					minutosEnteroEntrada = atoi(minutosEntrada);
+					segundosEnteroEntrada = atoi(segundosEntrada);
+					horasSalida = strtok(aux1, ":");
+					minutosSalida = strtok(NULL, ":");
+					segundosSalida = strtok(NULL, ":");
+					horasEnteroSalida = atoi(horasSalida);
+					minutosEnteroSalida = atoi(minutosSalida);
+					segundosEnteroSalida = atoi(segundosSalida);
+					i++;
+				}
+				for (int i = 0; i <= horasEnteroSalida - horasEnteroSalida; i++) {
+					lista->tarifaPagar += 0.75;
+				}
+				printf("\nSU TARIFA A PAGAR ES %.2f\n", lista->tarifaPagar);
+				system("pause");
+				system("cls");
+				fopen("TICKET DE SALIDA.txt", "w");
+				system("cls");
+				ticket = fopen("TICKET DE SALIDA.txt", "w");
+				printf("*****************************************************");
+				gotoxy(18, 1);
+				printf("TICKET DE SALIDA");
+				gotoxy(0, 1);
+				printf("*");
+				gotoxy(52, 1);
+				printf("*");
+				gotoxy(0, 2);
+				printf("* NOMBRE CLIENTE: %s", lista->nombrePropietario);
+				gotoxy(52, 2);
+				printf("*");
+				gotoxy(0, 3);
+				printf("* CEDULA DEL CLIENTE: %d", lista->numeroCedula);
+				gotoxy(52, 3);
+				printf("*");
+				gotoxy(0, 4);
+				printf("* FECHA DE ENTRADA: %s", lista->fechaEntrada);
+				gotoxy(52, 4);
+				printf("*");
+				gotoxy(0, 5);
+				printf("* HORA DE ENTRADA: %d:%d:%d", horasEnteroEntrada,minutosEnteroEntrada,segundosEnteroEntrada);
+				gotoxy(52, 5);
+				printf("*");
+				gotoxy(0, 6);
+				printf("* FECHA DE SALIDA: %s", lista->fechaSalida);
+				gotoxy(52, 6);
+				printf("*");
+				gotoxy(0, 7);
+				printf("\n* HORA DE SALIDA: %d:%d:%d", horasEnteroSalida,minutosEnteroSalida,segundosEnteroSalida);
+				gotoxy(52, 7);
+				printf("*");
+				gotoxy(0, 8);
+				printf("\n* TARIFA PAGADA: %.2f", lista->tarifaPagar);
+				gotoxy(52, 8);
+				printf("*");
+				gotoxy(0, 9);
+				printf("* PLACA DEL VEHICULO: %s", lista->placaAuto);
+				gotoxy(52, 9);
+				printf("*");
+				gotoxy(0, 10);
+				printf("* VEHICULO: %s", lista->modeloAuto);
+				gotoxy(52, 10);
+				printf("*");
+				gotoxy(0, 11);
+				printf("*****************************************************\n");
+				fprintf(ticket, "*********************************************************");
+				fprintf(ticket, "\n*\t\tTICKET DE ENTRADA\t\t\t*");
+				fprintf(ticket, "\n* NOMBRE CLIENTE: %s\t\t\t*", lista->nombrePropietario);
+				fprintf(ticket, "\n* CEDULA DEL CLIENTE: %d\t\t\t*", lista->numeroCedula);
+				fprintf(ticket, "\n* FECHA DE ENTRADA: %s\t*", lista->fechaEntrada);
+				fprintf(ticket, "\n* HORA DE ENTRADA: %s\t\t\t\t*", lista->horaEntrada);
+				fprintf(ticket, "\n* FECHA DE SALIDA: %s\t*", lista->fechaSalida);
+				fprintf(ticket, "\n* HORA DE SALIDA: %s\t\t\t\t*", lista->horaSalida);
+				fprintf(ticket, "\n* PLACA DEL VEHICULO: %s\t\t\t\t*", lista->placaAuto);
+				fprintf(ticket, "\n* VEHICULO: %s\t\t\t\t\t*", lista->modeloAuto);
+				fprintf(ticket, "\n*********************************************************");
+				fclose(ticket);
+				system("pause");
+			}
+		}
+		if (comp == 4) {
+			if (ced == lista->numeroCedula && strcmp(placa, lista->placaAuto) == 0) {
+				GetDateFormat(LOCALE_USER_DEFAULT, DATE_LONGDATE, NULL, NULL, lista->fechaSalida, 35);
+				GetTimeFormat(LOCALE_USER_DEFAULT, TIME_FORCE24HOURFORMAT, NULL, NULL, lista->horaSalida, 11);
+				int horasEnteroEntrada, minutosEnteroEntrada, segundosEnteroEntrada, i = 0;
+				int horasEnteroSalida, minutosEnteroSalida, segundosEnteroSalida;
+				char *horasEntrada, *minutosEntrada, *segundosEntrada, *horasSalida, *minutosSalida, *segundosSalida;
+				while (i<1) {
+					horasEntrada = strtok(lista->horaEntrada, ":");
+					minutosEntrada = strtok(NULL, ":");
+					segundosEntrada = strtok(NULL, ":");
+					horasEnteroEntrada = atoi(horasEntrada);
+					minutosEnteroEntrada = atoi(minutosEntrada);
+					segundosEnteroEntrada = atoi(segundosEntrada);
+					horasSalida = strtok(lista->horaSalida, ":");
+					minutosSalida = strtok(NULL, ":");
+					segundosSalida = strtok(NULL, ":");
+					horasEnteroSalida = atoi(horasSalida);
+					minutosEnteroSalida = atoi(minutosSalida);
+					segundosEnteroSalida = atoi(segundosSalida);
+					i++;
+				}
+				for (int i = 0; i <= horasEnteroSalida - horasEnteroSalida; i++) {
+					lista->tarifaPagar += 0.75;
+				}
+				printf("\nSU TARIFA A PAGAR ES %.2f", lista->tarifaPagar);
+				system("pause");
+				system("cls");
+				fopen("TICKET DE SALIDA.txt", "w");
+				system("cls");
+				ticket = fopen("TICKET DE SALIDA.txt", "w");
+				printf("*****************************************************");
+				gotoxy(18, 1);
+				printf("TICKET DE SALIDA");
+				gotoxy(0, 1);
+				printf("*");
+				gotoxy(52, 1);
+				printf("*");
+				gotoxy(0, 2);
+				printf("* NOMBRE CLIENTE: %s", lista->nombrePropietario);
+				gotoxy(52, 2);
+				printf("*");
+				gotoxy(0, 3);
+				printf("* CEDULA DEL CLIENTE: %d", lista->numeroCedula);
+				gotoxy(52, 3);
+				printf("*");
+				gotoxy(0, 4);
+				printf("* FECHA DE ENTRADA: %s", lista->fechaEntrada);
+				gotoxy(52, 4);
+				printf("*");
+				gotoxy(0, 5);
+				printf("* HORA DE ENTRADA: %d:%d:%d", horasEnteroEntrada, minutosEnteroEntrada, segundosEnteroEntrada);
+				gotoxy(52, 5);
+				printf("*");
+				gotoxy(0, 6);
+				printf("* FECHA DE SALIDA: %s", lista->fechaSalida);
+				gotoxy(52, 6);
+				printf("*");
+				gotoxy(0, 7);
+				printf("\n* HORA DE SALIDA: %d:%d:%d", horasEnteroSalida, minutosEnteroSalida, segundosEnteroSalida);
+				gotoxy(52, 7);
+				printf("*");
+				gotoxy(0, 8);
+				printf("\n* TARIFA PAGADA: %.2f", lista->tarifaPagar);
+				gotoxy(52, 8);
+				printf("*");
+				gotoxy(0, 9);
+				printf("* PLACA DEL VEHICULO: %s", lista->placaAuto);
+				gotoxy(52, 9);
+				printf("*");
+				gotoxy(0, 10);
+				printf("* VEHICULO: %s", lista->modeloAuto);
+				gotoxy(52, 10);
+				printf("*");
+				gotoxy(0, 11);
+				printf("*****************************************************\n");
+				fprintf(ticket, "*********************************************************");
+				fprintf(ticket, "\n*\t\tTICKET DE ENTRADA\t\t\t*");
+				fprintf(ticket, "\n* NOMBRE CLIENTE: %s\t\t\t*", lista->nombrePropietario);
+				fprintf(ticket, "\n* CEDULA DEL CLIENTE: %d\t\t\t*", lista->numeroCedula);
+				fprintf(ticket, "\n* FECHA DE ENTRADA: %s\t*", lista->fechaEntrada);
+				fprintf(ticket, "\n* HORA DE ENTRADA: %s\t\t\t\t*", lista->horaEntrada);
+				fprintf(ticket, "\n* FECHA DE SALIDA: %s\t*", lista->fechaSalida);
+				fprintf(ticket, "\n* HORA DE SALIDA: %s\t\t\t\t*", lista->horaSalida);
+				fprintf(ticket, "\n* PLACA DEL VEHICULO: %s\t\t\t\t*", lista->placaAuto);
+				fprintf(ticket, "\n* VEHICULO: %s\t\t\t\t\t*", lista->modeloAuto);
+				fprintf(ticket, "\n*********************************************************");
+				fclose(ticket);
+				system("pause");
+			}
+		}
 		while (lista->siguienteDireccion != NULL) {
-			if (ced==lista->numeroCedula && strcmp(placa, lista->placaAuto) == 0) {
-
+			if (ced == lista->numeroCedula && strcmp(placa, lista->placaAuto) == 0) {
+				GetDateFormat(LOCALE_USER_DEFAULT, DATE_LONGDATE, NULL, NULL, lista->fechaSalida, 35);
+				GetTimeFormat(LOCALE_USER_DEFAULT, TIME_FORCE24HOURFORMAT, NULL, NULL, lista->horaSalida, 11);
+				int horasEnteroEntrada, minutosEnteroEntrada, segundosEnteroEntrada, i = 0;
+				int horasEnteroSalida, minutosEnteroSalida, segundosEnteroSalida;
+				char *horasEntrada, *minutosEntrada, *segundosEntrada, *horasSalida, *minutosSalida, *segundosSalida;
+				while (i<1) {
+					horasEntrada = strtok(lista->horaEntrada, ":");
+					minutosEntrada = strtok(NULL, ":");
+					segundosEntrada = strtok(NULL, ":");
+					horasEnteroEntrada = atoi(horasEntrada);
+					minutosEnteroEntrada = atoi(minutosEntrada);
+					segundosEnteroEntrada = atoi(segundosEntrada);
+					horasSalida = strtok(lista->horaSalida, ":");
+					minutosSalida = strtok(NULL, ":");
+					segundosSalida = strtok(NULL, ":");
+					horasEnteroSalida = atoi(horasSalida);
+					minutosEnteroSalida = atoi(minutosSalida);
+					segundosEnteroSalida = atoi(segundosSalida);
+					i++;
+				}
+				for (int i = 0; i <= horasEnteroSalida - horasEnteroSalida; i++) {
+					lista->tarifaPagar += 0.75;
+				}
+				printf("\nSU TARIFA A PAGAR ES %.2f\n", lista->tarifaPagar);
+				system("pause");
+				system("cls");
+				fopen("TICKET DE SALIDA.txt", "w");
+				system("cls");
+				ticket = fopen("TICKET DE SALIDA.txt", "w");
+				printf("*****************************************************");
+				gotoxy(18, 1);
+				printf("TICKET DE SALIDA");
+				gotoxy(0, 1);
+				printf("*");
+				gotoxy(52, 1);
+				printf("*");
+				gotoxy(0, 2);
+				printf("* NOMBRE CLIENTE: %s", lista->nombrePropietario);
+				gotoxy(52, 2);
+				printf("*");
+				gotoxy(0, 3);
+				printf("* CEDULA DEL CLIENTE: %d", lista->numeroCedula);
+				gotoxy(52, 3);
+				printf("*");
+				gotoxy(0, 4);
+				printf("* FECHA DE ENTRADA: %s", lista->fechaEntrada);
+				gotoxy(52, 4);
+				printf("*");
+				gotoxy(0, 5);
+				printf("* HORA DE ENTRADA: %d:%d:%d", horasEnteroEntrada, minutosEnteroEntrada, segundosEnteroEntrada);
+				gotoxy(52, 5);
+				printf("*");
+				gotoxy(0, 6);
+				printf("* FECHA DE SALIDA: %s", lista->fechaSalida);
+				gotoxy(52, 6);
+				printf("*");
+				gotoxy(0, 7);
+				printf("\n* HORA DE SALIDA: %d:%d:%d", horasEnteroSalida, minutosEnteroSalida, segundosEnteroSalida);
+				gotoxy(52, 7);
+				printf("*");
+				gotoxy(0, 8);
+				printf("\n* TARIFA PAGADA: %.2f", lista->tarifaPagar);
+				gotoxy(52, 8);
+				printf("*");
+				gotoxy(0, 9);
+				printf("* PLACA DEL VEHICULO: %s", lista->placaAuto);
+				gotoxy(52, 9);
+				printf("*");
+				gotoxy(0, 10);
+				printf("* VEHICULO: %s", lista->modeloAuto);
+				gotoxy(52, 10);
+				printf("*");
+				gotoxy(0, 11);
+				printf("*****************************************************\n");
+				fprintf(ticket, "*********************************************************");
+				fprintf(ticket, "\n*\t\tTICKET DE ENTRADA\t\t\t*");
+				fprintf(ticket, "\n* NOMBRE CLIENTE: %s\t\t\t*", lista->nombrePropietario);
+				fprintf(ticket, "\n* CEDULA DEL CLIENTE: %d\t\t\t*", lista->numeroCedula);
+				fprintf(ticket, "\n* FECHA DE ENTRADA: %s\t*", lista->fechaEntrada);
+				fprintf(ticket, "\n* HORA DE ENTRADA: %s\t\t\t\t*", lista->horaEntrada);
+				fprintf(ticket, "\n* FECHA DE SALIDA: %s\t*", lista->fechaSalida);
+				fprintf(ticket, "\n* HORA DE SALIDA: %s\t\t\t\t*", lista->horaSalida);
+				fprintf(ticket, "\n* PLACA DEL VEHICULO: %s\t\t\t\t*", lista->placaAuto);
+				fprintf(ticket, "\n* VEHICULO: %s\t\t\t\t\t*", lista->modeloAuto);
+				fprintf(ticket, "\n*********************************************************");
+				fclose(ticket);
+				system("pause");
+				return;
 			}
 		}
 
@@ -454,39 +1049,54 @@ void ingresarEntre(ListaDoble lista) {
 	else {
 		printf("\nNO HAY AUTOS");
 	}
-}*/
+}
 
 int salirParqueadero(ListaDoble lista) {
-	int comp=0;
+	int comp = 0;
 	long cedulaAux;
 	char *placaAux = (char*)malloc(10 * sizeof(char));
 	char *letrasPlaca = (char*)malloc(3 * sizeof(char));
 	char *numeroPlaca = (char*)malloc(4 * sizeof(char));
+	Nodo *aux1 = new Nodo(), *aux = lista;
 	printf("\nINGRESE SU CEDULA PARA SACAR SU AUTO");
 	cedulaAux = atoi(cedula());
 	printf("\nINGRESE LAS PLACAS DE SU AUTO PARA PODER SACARLO");
-	printf("\nINGRESE LAS LETRAS DE SU PLACA: ");
-	letras(letrasPlaca);
-	strcpy_s(placaAux, strlen(letrasPlaca), letrasPlaca);
-	strcat_s(placaAux, sizeof placaAux, "-");
-	printf("\nINGRESE LOS NUMEROS DE SU PLACA: ");
-	numeros(numeroPlaca);
-	strcat_s(placaAux, sizeof placaAux, numeroPlaca);
+	do {
+		printf("\nINGRESE LAS LETRAS DE SU PLACA:");
+		letras(letrasPlaca);
+	} while (strlen(letrasPlaca) <3 || strlen(letrasPlaca)>3);
+	strcpy(placaAux, letrasPlaca);
+	strcat(placaAux, "-");
+	do {
+		printf("\nINGRESE NUMEROS DE SU PLACA:");
+		printf("\nNO SEOLVIDE QUE SI SU PLACA TIENE TRES NUMEROS ANTEPONGA EL NUMERO 0\n");
+		numeros(numeroPlaca);
+	} while (strlen(numeroPlaca) < 4 || strlen(numeroPlaca) > 4);
+	strcat(placaAux, numeroPlaca);
+	
 	if (lista != NULL) {
-		if (cedulaAux == lista->numeroCedula&&strcmp(placaAux,lista->placaAuto)==0&&lista->siguienteDireccion == NULL&&lista->anteriorDireccion == NULL) {
+		if (cedulaAux == lista->numeroCedula&&strcmp(placaAux, lista->placaAuto) == 0 && lista->siguienteDireccion == NULL&&lista->anteriorDireccion == NULL) {
 			comp++;
-			printf("\nLA LISTA SOLO TIENE UN ELEMENTO, SE BORRARA TODO");
+			calcularTarifa(aux, cedulaAux, placaAux, comp);
+			//printf("\nLA LISTA SOLO TIENE UN ELEMENTO, SE BORRARA TODO");
 			return comp;
 		}
-	
+
 		while (lista->siguienteDireccion != NULL) {
 			if (cedulaAux == lista->numeroCedula&&strcmp(placaAux, lista->placaAuto) == 0) {
-				if (lista->anteriorDireccion == NULL) {
+				if (lista->anteriorDireccion == NULL&&lista->siguienteDireccion!=NULL) {
 					comp += 2;
+					calcularTarifa(lista, cedulaAux, placaAux, comp);
 					return comp;
 				}
 				if (lista->siguienteDireccion != NULL&&lista->anteriorDireccion != NULL) {
 					comp += 3;
+					calcularTarifa(lista, cedulaAux, placaAux, comp);
+					aux1 = lista->siguienteDireccion;
+					lista = lista->anteriorDireccion;
+					lista->siguienteDireccion = aux1;
+
+					aux1->anteriorDireccion = lista;
 					return comp;
 				}
 
@@ -496,10 +1106,12 @@ int salirParqueadero(ListaDoble lista) {
 			lista = lista->siguienteDireccion;
 			if (cedulaAux == lista->numeroCedula&&strcmp(placaAux, lista->placaAuto) == 0 && lista->siguienteDireccion == NULL&&lista->anteriorDireccion != NULL) {
 				comp += 4;
+				calcularTarifa(lista, cedulaAux, placaAux, comp);
 				return comp;
 			}
 		}
-	}else{
+	}
+	else {
 		printf("\n\nNO HAY AUTOS REGISTRADOS...");
 	}
 	return 0;
@@ -511,8 +1123,12 @@ void imprimirLista(ListaDoble lista) {
 	}
 	else {
 		while (lista != NULL) {
-			printf("%d", lista->numeroCedula);
-			printf("%s", lista->placaAuto);
+			printf("%s", lista->nombrePropietario);
+			printf("\n%d", lista->numeroCedula);
+			printf("\n%s", lista->fechaEntrada);
+			printf("\n%s", lista->horaEntrada);
+			printf("\n%s", lista->placaAuto);
+			printf("\n%s", lista->modeloAuto);
 			printf("\n\n");
 			lista = lista->siguienteDireccion;
 		}
@@ -523,7 +1139,7 @@ void imprimirLista(ListaDoble lista) {
 int main()
 {
 	ListaDoble lista = NULL;
-	//char a;
+	Nodo *aux1 = new Nodo();
 	int opcionDelMenu, comp;
 inicio:
 	opcionDelMenu = menu();
@@ -566,32 +1182,39 @@ inicio:
 	case 6: {
 		comp = 0;
 		system("cls");
-		//verNumerosPrimos(listaDoble,listaPrimos);
-		/*comp = eliminarDeLista(listaDoble);
-		printf("\n%d", comp);
+		comp = salirParqueadero(lista);
+		if (comp == 0) {
+			printf("\nNO SE HA INGRESADO UN VEHICULO CON ESAS ESPECIFICACIONES!!!\n");
+		}
 		if (comp == 1) {
-			listaDoble = NULL;
+			lista = NULL;
 		}
 		if (comp == 2) {
-			printf("\nSI PASO");
-			aux1 = listaDoble;
-			listaDoble = listaDoble->siguienteDireccion;
+			aux1 = lista;
+			lista = lista->siguienteDireccion;
 			aux1->siguienteDireccion = aux1->anteriorDireccion = NULL;
 			aux1 = NULL;
-			listaDoble->anteriorDireccion = NULL;
+			lista->anteriorDireccion = NULL;
 		}
-		if (comp == 3) {
-			while (listaDoble->siguienteDireccion != NULL) {
-				listaDoble = listaDoble->siguienteDireccion;
+		/*if (comp == 3) {
+			aux1 = lista->siguienteDireccion;
+			lista = lista->anteriorDireccion;
+			lista->siguienteDireccion = aux1;
+
+			aux1->anteriorDireccion = lista;
+		}*/
+		if (comp == 4) {
+			while (lista->siguienteDireccion != NULL) {
+				lista = lista->siguienteDireccion;
 			}
 			//		aux1=listaDoble;
-			listaDoble = listaDoble->anteriorDireccion;
-			listaDoble->siguienteDireccion = NULL;
+			lista = lista->anteriorDireccion;
+			lista->siguienteDireccion = NULL;
 			comp = 0;
-			while (listaDoble->anteriorDireccion != NULL) {
-				listaDoble = listaDoble->anteriorDireccion;
+			while (lista->anteriorDireccion != NULL) {
+				lista = lista->anteriorDireccion;
 			}
-		}*/
+		}
 
 
 		system("pause");
