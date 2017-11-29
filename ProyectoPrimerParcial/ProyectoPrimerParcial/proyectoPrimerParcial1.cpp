@@ -40,6 +40,10 @@ struct Nodo {
 	struct Nodo *siguienteDireccion;
 	struct Nodo *anteriorDireccion;
 };
+struct ListaParqueadero {
+	char datos[75];
+};
+typedef struct ListaParqueadero autosDentro;
 typedef struct Nodo *ListaDoble;
 struct Placas {
 	char letrasPlaca[3];
@@ -96,15 +100,6 @@ void carrito()
 	printf("TOMAR EL TICK");
 }
 
-string convertir(char *c, int i) {
-	return string(*c, i);
-}
-char* covertStringChar(string cadena) {
-	char* aux = new char[cadena.size()];
-	strcpy(aux, cadena.c_str());
-	return aux;
-}
-
 /*
 llamar a la ayuda
 ShellExecute(NULL, TEXT("open"), TEXT("ayuda.chm"), NULL, NULL, SW_SHOWNORMAL);
@@ -151,7 +146,6 @@ static void printQr(const uint8_t qrcode[]) {
 		fputs("\n", stdout);
 	}
 }
-
 static void generarQr(char *loqueimprime)
 {
 	char *dato = loqueimprime;
@@ -384,7 +378,6 @@ void ingresarPrimerDato(ListaDoble &lista) {
 	carrito(); color(07);
 	system("pause");
 	system("CLS");
-	fopen("TICKET DE ENTRADA.txt", "w");
 	system("cls");
 	ticket = fopen("TICKET DE ENTRADA.txt", "w");
 	printf("*****************************************************");
@@ -454,11 +447,13 @@ void ingresarPrimerDato(ListaDoble &lista) {
 	strcat(QR, "\n");
 	strcat(QR, "HORA O FRACCION");
 	generarQr(QR);
+	return;
 	}
 	else {
 		printf("\nEL PRIMER VEHICULO YA ESTA EN EL PARQUEADERO\n");
+		return;
 	}
-
+	return;
 }
 void ingresarUltimaPosicion(ListaDoble &lista) {
 	char*QR = (char*)malloc(50 * sizeof(char));
@@ -466,19 +461,13 @@ void ingresarUltimaPosicion(ListaDoble &lista) {
 	FILE *ticket;
 	Placas placa;
 	Nodo *aux2 = lista, *aux = new Nodo();
-
 	char *letrasPlaca = (char*)malloc(3 * sizeof(char));
-	//char letrasPlaca[3], numeroPlaca[4], fecha[50], hora[30];
 	char *numeroPlaca = (char*)malloc(4 * sizeof(char));
-
 	char *fecha = (char*)malloc(50 * sizeof(char));
 	char *hora = (char*)malloc(30 * sizeof(char));;
-
 	if (lista != NULL) {
-
 		aux->numeroCedula = atoi(cedula());
 		printf("\nINGRESE NOMBRE DEL PROPIETARIO:");
-		//fflush(stdin);
 		letras(aux->nombrePropietario);
 		printf("\nINGRESE PLACA");
 		do {
@@ -500,7 +489,6 @@ void ingresarUltimaPosicion(ListaDoble &lista) {
 			}
 		}
 		if (lista->siguienteDireccion != NULL) {
-
 			while (lista->siguienteDireccion != NULL) {
 				if (strcmp(lista->placaAuto, aux->placaAuto) == 0) {
 					printf("\nEL AUTO NO PUEDE INGRESAR PUES YA ESTA DENTRO DEL PARQUEADERO");
@@ -528,7 +516,6 @@ void ingresarUltimaPosicion(ListaDoble &lista) {
 		letras(aux->modeloAuto);
 		GetDateFormat(LOCALE_USER_DEFAULT, DATE_LONGDATE, NULL, NULL, aux->fechaEntrada, 50);
 		GetTimeFormat(LOCALE_USER_DEFAULT, TIME_FORCE24HOURFORMAT, NULL, NULL, aux->horaEntrada, 30);
-		//aux2 = lista;
 		while (aux2->siguienteDireccion != NULL) {
 			aux2 = aux2->siguienteDireccion;
 		}
@@ -539,7 +526,6 @@ void ingresarUltimaPosicion(ListaDoble &lista) {
 		printf("\nDATO INGRESADO!");
 		system("pause");
 		system("cls");
-		fopen("TICKET DE ENTRADA.txt", "w");
 		system("cls");
 		ticket = fopen("TICKET DE ENTRADA.txt", "w");
 		printf("*****************************************************");
@@ -613,6 +599,7 @@ void ingresarUltimaPosicion(ListaDoble &lista) {
 	else {
 		printf("\nDEBE INGRESAR EL PRIMER ELEMENTO!!\n");
 	}
+	return;
 }
 void ingresarPrimeraPosicion(ListaDoble &lista) {
 	char*QR = (char*)malloc(50 * sizeof(char));
@@ -621,16 +608,12 @@ void ingresarPrimeraPosicion(ListaDoble &lista) {
 	Nodo *aux = new Nodo(), *aux2 = lista;
 	Placas placa;
 	char *letrasPlaca = (char*)malloc(3 * sizeof(char));
-	//char letrasPlaca[3], numeroPlaca[4], fecha[50], hora[30];
 	char *numeroPlaca = (char*)malloc(4 * sizeof(char));
-
 	char *fecha = (char*)malloc(50 * sizeof(char));
 	char *hora = (char*)malloc(30 * sizeof(char));;
 	if (lista != NULL) {
-
 		aux->numeroCedula = atoi(cedula());
 		printf("\nINGRESE NOMBRE DEL PROPIETARIO DEL AUTO:");
-		//fflush(stdin);
 		letras(aux->nombrePropietario);
 		printf("\nINGRESE PLACA");
 		do {
@@ -652,7 +635,6 @@ void ingresarPrimeraPosicion(ListaDoble &lista) {
 			}
 		}
 		if(lista->siguienteDireccion!=NULL) {
-
 			while (lista->siguienteDireccion != NULL) {
 				if (strcmp(lista->placaAuto, aux->placaAuto) == 0) {
 					printf("\nEL AUTO NO PUEDE INGRESAR PUES YA ESTA DENTRO DEL PARQUEADERO");
@@ -688,7 +670,6 @@ void ingresarPrimeraPosicion(ListaDoble &lista) {
 		printf("\nDATO INGRESADO!!!\n");
 		system("pause");
 		system("cls");
-		fopen("TICKET DE ENTRADA.txt", "w");
 		system("cls");
 		ticket = fopen("TICKET DE ENTRADA.txt", "w");
 		printf("*****************************************************");
@@ -762,6 +743,7 @@ void ingresarPrimeraPosicion(ListaDoble &lista) {
 	else {
 		printf("\nDEBE INGRESAR EL PRIMER ELEMENTO!!\n");
 	}
+	return;
 }
 void ingresarEntre(ListaDoble lista) {
 	char*QR = (char*)malloc(50 * sizeof(char));
@@ -769,9 +751,7 @@ void ingresarEntre(ListaDoble lista) {
 	FILE *ticket;
 	Placas placa;
 	char *letrasPlaca = (char*)malloc(3 * sizeof(char));
-	//char letrasPlaca[3], numeroPlaca[4], fecha[50], hora[30];
 	char *numeroPlaca = (char*)malloc(4 * sizeof(char));
-
 	char *fecha = (char*)malloc(50 * sizeof(char));
 	char *hora = (char*)malloc(30 * sizeof(char));;
 	system("pause");
@@ -780,7 +760,6 @@ void ingresarEntre(ListaDoble lista) {
 	int posicion;
 	printf("\nINGRESE POSICION A INSERTAR");
 	scanf_s("%d", &posicion);
-	//posicion+=1;
 	if (lista != NULL) {
 		int iterador = 1, bandera = 0;
 		if (posicion == 0) {
@@ -788,13 +767,10 @@ void ingresarEntre(ListaDoble lista) {
 			ingresarPrimeraPosicion(lista);
 		}
 		else {
-
-
 			while (aux2->siguienteDireccion != NULL) {
 				if (posicion == iterador) {
 					aux->numeroCedula = atoi(cedula());
 					printf("\nINGRESE NOMBRE DEL PROPIETARIO:");
-					//fflush(stdin);
 					letras(aux->nombrePropietario);
 					printf("\nINGRESE PLACA");
 					do {
@@ -816,7 +792,6 @@ void ingresarEntre(ListaDoble lista) {
 						}
 					}
 					if (lista->siguienteDireccion != NULL) {
-
 						while (lista->siguienteDireccion != NULL) {
 							if (strcmp(lista->placaAuto, aux->placaAuto) == 0) {
 								printf("\nEL AUTO NO PUEDE INGRESAR PUES YA ESTA DENTRO DEL PARQUEADERO");
@@ -852,7 +827,6 @@ void ingresarEntre(ListaDoble lista) {
 					carrito(); color(07);
 					system("pause");
 					system("cls");
-					fopen("TICKET DE ENTRADA.txt", "w");
 					system("cls");
 					ticket = fopen("TICKET DE ENTRADA.txt", "w");
 					printf("*****************************************************");
@@ -941,15 +915,12 @@ void ingresarEntre(ListaDoble lista) {
 			if (iterador<posicion&&bandera == 0) {
 				printf("\n\nLa posicion ingresada es superior al numero de los elementos de la lista!\n\n");
 			}
-			// else{
-			//   printf("\nDEBE INGRESAR EL PRIMER ELEMENTO!!\n");
-			//}
 		}
 	}
 	else {
 		printf("\nDEBE INGRESAR EL PRIMER ELEMENTO!!\n");
 	}
-	
+	return;
 }
 void calcularTarifa(ListaDoble lista, long ced, char* placa, int comp) {
 	char*QR = (char*)malloc(50 * sizeof(char));
@@ -989,8 +960,6 @@ void calcularTarifa(ListaDoble lista, long ced, char* placa, int comp) {
 				}
 				printf("\nSU TARIFA A PAGAR ES %.2f\n", lista->tarifaPagar);
 				system("pause");
-				system("cls");
-				fopen("TICKET DE SALIDA.txt", "w");
 				system("cls");
 				ticket = fopen("TICKET DE SALIDA.txt", "w");
 				printf("*****************************************************");
@@ -1302,7 +1271,6 @@ void calcularTarifa(ListaDoble lista, long ced, char* placa, int comp) {
 		printf("\nNO HAY AUTOS");
 	}
 }
-
 int salirParqueadero(ListaDoble lista) {
 	int comp = 0;
 	long cedulaAux;
@@ -1330,7 +1298,6 @@ int salirParqueadero(ListaDoble lista) {
 		if (cedulaAux == lista->numeroCedula&&strcmp(placaAux, lista->placaAuto) == 0 && lista->siguienteDireccion == NULL&&lista->anteriorDireccion == NULL) {
 			comp++;
 			calcularTarifa(aux, cedulaAux, placaAux, comp);
-			//printf("\nLA LISTA SOLO TIENE UN ELEMENTO, SE BORRARA TODO");
 			return comp;
 		}
 
@@ -1365,12 +1332,11 @@ int salirParqueadero(ListaDoble lista) {
 	}
 	else {
 		printf("\n\nNO HAY AUTOS REGISTRADOS...");
+		return 0;
 	}
-	return 0;
 }
-
 void imprimirLista(ListaDoble lista) {
-	ofstream datos ("LISTA PARQUEADERO.txt");
+	ofstream datos("LISTA PARQUEADERO.txt");
 	if (lista == NULL) {
 		printf("No hay elementos en la lista!\n\n");
 		datos << "No hay elementos en la lista!\n\n" << endl;
@@ -1378,50 +1344,124 @@ void imprimirLista(ListaDoble lista) {
 	else {
 		while (lista != NULL) {
 			printf("%s", lista->nombrePropietario);
-			datos<< lista->nombrePropietario<<endl;
+			datos << lista->nombrePropietario << endl;
 			printf("\n%d", lista->numeroCedula);
-			datos<<"\n"<< lista->numeroCedula<<endl;
+			datos << "\n" << lista->numeroCedula << endl;
 			printf("\n%s", lista->fechaEntrada);
-			datos<<"\n"<< lista->fechaEntrada<<endl;
+			datos << "\n" << lista->fechaEntrada << endl;
 			printf("\n%s", lista->horaEntrada);
-			datos<<"\n"<< lista->horaEntrada<<endl;
+			datos << "\n" << lista->horaEntrada << endl;
 			printf("\n%s", lista->placaAuto);
-			datos<<"\n"<< lista->placaAuto<<endl;
+			datos << "\n" << lista->placaAuto << endl;
 			printf("\n%s", lista->modeloAuto);
-			datos<<"\n"<< lista->modeloAuto<<endl;
+			datos << "\n" << lista->modeloAuto << endl;
 			printf("\n\n");
-			datos<<"\n\n"<<endl;
+			datos << "\n\n" << endl;
 			lista = lista->siguienteDireccion;
 		}
+		datos.close();
+		system("pause");
+		//PDF
+		int imp;
+		system("cls");
+		imp = AyudaF1();
+		if (imp == 1)
+		{
+			ofstream LeerDatos;
+			LeerDatos.open("LISTA PARQUEADERO.txt", ios::out | ios::app);
+			tifstream in(TEXT("LISTA PARQUEADERO.txt"));
+			PrintFile(in);
+			ShellExecute(NULL, TEXT("open"), TEXT("D:\\Programacion 1\\C++\\Proyecto\\PDF QR\\pdf\\Datos.pdf"), NULL, NULL, SW_SHOWNORMAL);
+		}
+		system("pause");
+		_getch;
 	}
-	datos.close();
-	system("pause");
-	//PDF
-	int imp;
-	system("cls");
-	imp = AyudaF1();
-	if (imp == 1)
-	{
-		ofstream LeerDatos;
-		LeerDatos.open("LISTA PARQUEADERO.txt", ios::out | ios::app);
-		tifstream in(TEXT("LISTA PARQUEADERO.txt"));
-		PrintFile(in);
-		ShellExecute(NULL, TEXT("open"), TEXT("D:\\Programacion 1\\C++\\Proyecto\\PDF QR\\pdf\\Datos.pdf"), NULL, NULL, SW_SHOWNORMAL);
-	}
-	system("pause");
-	_getch;
+	return;
 }
-
-
+int contarlineas() {
+	FILE *pf;
+	int ch, num = 0;
+	if ((pf = fopen("LISTA PARQUEADERO.txt", "r")) != NULL) {
+		while ((ch = fgetc(pf)) != EOF) {
+			if (ch == '\n') {
+				num++;
+			}
+		}
+	}
+	else {
+		return 0;
+	}
+	fclose(pf);
+	return num;
+}
+void leerLista(ListaDoble &lista,int cont) {
+	Nodo *aux1 = new Nodo();
+	autosDentro autos[50];
+	FILE *parqueadero;
+	int c,aux=0;
+	char lectura[50];
+	if ((parqueadero = fopen("LISTA PARQUEADERO.txt", "r")) == 0) {
+		return;
+	}else{
+		for (int i = 0; !feof(parqueadero); i++) {
+			fflush(stdin);
+			fscanf(parqueadero, "%[^\n]", &lectura);
+			strcpy(autos[i].datos, lectura);
+			if ((c = getc(parqueadero)) == EOF) {
+				break;
+			}
+		}
+		while (aux <= cont-2) {
+			if (aux <= 14&&lista==NULL) {
+				strcpy(aux1->nombrePropietario, autos[aux].datos);
+				aux = aux + 2;
+				aux1->numeroCedula = atoi(autos[aux].datos);
+				aux += 2;
+				strcpy(aux1->fechaEntrada, autos[aux].datos);
+				aux += 2;
+				strcpy(aux1->horaEntrada, autos[aux].datos);
+				aux += 2;
+				strcpy(aux1->placaAuto, autos[aux].datos);
+				aux += 2;
+				strcpy(aux1->modeloAuto, autos[aux].datos);
+				aux1->anteriorDireccion = aux1->siguienteDireccion = NULL;
+				lista = aux1;
+				aux += 4;
+			}
+			else {
+				Nodo *aux1 = new Nodo();
+				strcpy(aux1->nombrePropietario, autos[aux].datos);
+				aux = aux + 2;
+				aux1->numeroCedula = atoi(autos[aux].datos);
+				aux += 2;
+				strcpy(aux1->fechaEntrada, autos[aux].datos);
+				aux += 2;
+				strcpy(aux1->horaEntrada, autos[aux].datos);
+				aux += 2;
+				strcpy(aux1->placaAuto, autos[aux].datos);
+				aux += 2;
+				strcpy(aux1->modeloAuto, autos[aux].datos);
+				aux1->siguienteDireccion = lista;
+				aux1->anteriorDireccion = lista->anteriorDireccion;
+				lista->anteriorDireccion = aux1;
+				lista = aux1;
+				aux += 4;
+			}
+		}
+		fclose(parqueadero);
+	}
+}
 int main()
 {
 	ListaDoble lista = NULL;
 	Nodo *aux1 = new Nodo();
+	int cont;
+	cont = contarlineas();
+	leerLista(lista,cont);
 	int opcionDelMenu, comp;
-	PlaySound("D:\\Universidad\\Programacion 1\\Traductor\\ZZ Top - La Grange.wav", NULL, SND_ASYNC);
+//	PlaySound("D:\\Universidad\\Programacion 1\\Traductor\\ZZ Top - La Grange.wav", NULL, SND_ASYNC);
 	inicio:
 	opcionDelMenu = menu();
-	
 	switch (opcionDelMenu) {
 	case 1: {
 		system("cls");
@@ -1485,18 +1525,10 @@ int main()
 			aux1 = NULL;
 			lista->anteriorDireccion = NULL;
 		}
-		/*if (comp == 3) {
-			aux1 = lista->siguienteDireccion;
-			lista = lista->anteriorDireccion;
-			lista->siguienteDireccion = aux1;
-
-			aux1->anteriorDireccion = lista;
-		}*/
 		if (comp == 4) {
 			while (lista->siguienteDireccion != NULL) {
 				lista = lista->siguienteDireccion;
 			}
-			//		aux1=listaDoble;
 			lista = lista->anteriorDireccion;
 			lista->siguienteDireccion = NULL;
 			comp = 0;
@@ -1513,7 +1545,4 @@ int main()
 		break;
 	}
 	}
-	system("pause");
-
-	return 0;
 }

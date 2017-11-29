@@ -1,11 +1,11 @@
 *********************************************************
 *		TICKET DE ENTRADA			*
-* NOMBRE CLIENTE: A			*
-* CEDULA DEL CLIENTE: 1723469712			*
+* NOMBRE CLIENTE: MAIKOL MORALES			*
+* CEDULA DEL CLIENTE: 1720418811			*
 * FECHA DE ENTRADA: martes, 28 de noviembre de 2017	*
-* HORA DE ENTRADA: 18				*
+* HORA DE ENTRADA: 21				*
 * FECHA DE SALIDA: martes, 28 de noviembre de 2017	*
-* HORA DE SALIDA: 18				*
+* HORA DE SALIDA: 21				*
 * PLACA DEL VEHICULO: AAA-1111				*
-* VEHICULO: A					*
+* VEHICULO: LOGAN					*
 *********************************************************
