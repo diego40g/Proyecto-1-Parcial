@@ -1,9 +1,27 @@
-/*UNIVERSIDAD DE LAS FUERZAS ARMADAS "ESPE"
-INGENIERIA EN SISTEMAS E INFORMATICA
+/**//*
+UNIVERSIDAD DE LAS FUERZAS ARMADAS"ESPE"
 PROYECTO PRIMER PARCIAL
-INTEGRANTES: MICHAEL MORALES, DIEGO PAZ
-PROFESOR: FERNANDO SOLIS
+Parqueadero
+con listas doblemente enlazadas
+Menu con backGrund
+Generera QR
+genera txt
+genera pdf
+Cancion de fondo
+Imagen del grupo
+Opcion Ayuda
+Ingreso inicio,fin,medio
+Salir del Parqueadero
+Salir del Sistema
+Instalador
+y proyecto ejecutado en phyton
+Autores: Diego Paz
+		 Michael Morales
+Fecha de Creacion: 17-11-2017	Fecha de Modificacion: 29-11-2017
+Profesor: Ing. Edgar Fernando Solis Acosta
+Carrera: Ingenieria en Sitemas e Informatica
 */
+
 //PERMITE UTILIZAR FUNCIONES COMO strcpy()
 #define _CRT_SECURE_NO_WARNINGS
 /*#ifdef _MSC_VER
@@ -1451,15 +1469,31 @@ void leerLista(ListaDoble &lista,int cont) {
 		fclose(parqueadero);
 	}
 }
+void encabezado()
+{
+	printf("\tUNIVERSIDAD DE LAS FUERZAS ARMADAS \"ESPE\"\n");
+	printf("\n\t\tPROYECTO PRIMER PARCIAL\n");
+	printf("\n\t\t  ESTRUCTURA DE DATOS\n");
+	printf("\n\t\t      PARQUEADERO\n");
+	printf("\n\tAUTORES: Michael Morales\n");
+	printf("\t         Diego Paz\n");
+	printf("\n\tNRC: 2479\n");
+	color(0);
+	system("pause");
+	color(07);
+	system("cls");
+}
+
 int main()
 {
+	PlaySound("D:\\Universidad\\Programacion 1\\Traductor\\ZZ Top - La Grange.wav", NULL, SND_ASYNC);
+	encabezado();
 	ListaDoble lista = NULL;
 	Nodo *aux1 = new Nodo();
 	int cont;
 	cont = contarlineas();
 	leerLista(lista,cont);
 	int opcionDelMenu, comp;
-//	PlaySound("D:\\Universidad\\Programacion 1\\Traductor\\ZZ Top - La Grange.wav", NULL, SND_ASYNC);
 	inicio:
 	opcionDelMenu = menu();
 	switch (opcionDelMenu) {
