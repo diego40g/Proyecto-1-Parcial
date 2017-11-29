@@ -1418,8 +1418,10 @@ int main()
 	ListaDoble lista = NULL;
 	Nodo *aux1 = new Nodo();
 	int opcionDelMenu, comp;
+	PlaySound("D:\\Universidad\\Programacion 1\\Traductor\\ZZ Top - La Grange.wav", NULL, SND_ASYNC);
 	inicio:
 	opcionDelMenu = menu();
+	
 	switch (opcionDelMenu) {
 	case 1: {
 		system("cls");
