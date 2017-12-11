@@ -293,15 +293,15 @@ char* cedula() {
 }
 int menu() {
 	char c;
-	const char *fr[50] = {"INGRESAR PRIMER AUTO AL PARQUEADERO		",
-						  "INGRESAR AUTO ALINICIO DEL PARQUEADERO	",
-						  "INGRESAR AUTO AL FINAL DEL PARQUEADERO	",
-						  "INGRESAR AUTO ENTRE PARQUEADEROS			",
-						  "MOSTRAR LISTA DE AUTOS EN EL PARQUEADERO	",
-						  "AYUDA DEL PROGRAMA						",
-						  "IMAGEN DEL GRUPO							",
-						  "SALIR DEL PARQUEADERO					",
-						  "SALIR DEL SISTEMA						" };
+	const char *fr[50] = {"INGRESAR PRIMER AUTO AL PARQUEADERO                  ",
+						  "INGRESAR AUTO ALINICIO DEL PARQUEADERO               ",
+						  "INGRESAR AUTO AL FINAL DEL PARQUEADERO               ",
+						  "INGRESAR AUTO ENTRE PARQUEADEROS                     ",
+						  "GUARDAR Y MOSTRAR LISTA DE AUTOS EN EL PARQUEADERO   ",
+						  "AYUDA DEL PROGRAMA                                   ",
+						  "IMAGEN DEL GRUPO                                     ",
+						  "SALIR DEL PARQUEADERO                                ",
+						  "SALIR DEL SISTEMA                                    " };
 	system("cls");
 	gotoxy(40, 1);
 	printf("MENU");

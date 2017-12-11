@@ -1,10 +1,10 @@
 *********************************************************
 *		TICKET DE ENTRADA			*
-* NOMBRE CLIENTE: LEO MORALES			*
-* CEDULA DEL CLIENTE: 1718521519			*
-* FECHA DE ENTRADA: martes, 28 de noviembre de 2017	*
-* HORA DE ENTRADA: 23:15:04				*
-* PLACA DEL VEHICULO: BBB-2222				*
-* VEHICULO: MAZDA					*
+* NOMBRE CLIENTE: JUANITO			*
+* CEDULA DEL CLIENTE: 1723469712			*
+* FECHA DE ENTRADA: miércoles, 29 de noviembre de 2017	*
+* HORA DE ENTRADA: 10:30:03				*
+* PLACA DEL VEHICULO: ABC-0123				*
+* VEHICULO: ABC					*
 *		HORA O FRACCION				*
 *********************************************************
