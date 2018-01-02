@@ -158,9 +158,9 @@ void funtrigono(taylor var)
 	system ("cls");
 	printf("\nEl valor de x es: %d\n",n);
 	printf("\nEl valor de n es: %d\n",var.n);
-	printf("\nEl valor del seno es igual a: %f\n",var.sin);
-	printf("\nEl valor del coseno es igual a: %f\n",var.cos);	
-	printf("\nEl valor de la tangente es igual a: %f\n",var.tan);
+	printf("\nEl valor del seno es igual a: %.2f\n",var.sin);
+	printf("\nEl valor del coseno es igual a: %.2f\n",var.cos);	
+	printf("\nEl valor de la tangente es igual a: %.2f\n",var.tan);
 	return;
 }
 
