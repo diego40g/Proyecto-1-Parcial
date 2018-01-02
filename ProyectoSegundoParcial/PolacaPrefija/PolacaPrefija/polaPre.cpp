@@ -12,6 +12,49 @@
 
 using namespace std;
 
+int  PDF() 
+{
+	int x;
+	int imp;
+	printf("\nPresione Enter ");
+	for (;; ) {
+		x = _getch();//captura la tecla de función ,pertenece a la libreria conio.h
+		if (x == 13)
+		{
+			imp = 1;
+			printf("\nGenerando...");
+			break;
+		}
+	}
+	return imp;
+}
+
+static void printQr(const uint8_t qrcode[]) {
+	int size = qrcodegen_getSize(qrcode);
+	int border = 4;
+	for (int y = -border; y < size + border; y++) {
+		for (int x = -border; x < size + border; x++) {
+			fputs((qrcodegen_getModule(qrcode, x, y) ? "\333\333" : "  "), stdout);
+		}
+		fputs("\n", stdout);
+	}
+}
+
+static void generarQr(char *loqueimprime)
+{
+	char *dato = loqueimprime;
+	enum qrcodegen_Ecc errCorLvl = qrcodegen_Ecc_LOW;  // Error correction level
+
+													   // Make and print the QR Code symbol
+	uint8_t qrcode[qrcodegen_BUFFER_LEN_MAX];
+	uint8_t tempBuffer[qrcodegen_BUFFER_LEN_MAX];
+	bool ok = qrcodegen_encodeText(dato, tempBuffer, qrcode, errCorLvl,
+		qrcodegen_VERSION_MIN, qrcodegen_VERSION_MAX, qrcodegen_Mask_AUTO, true);
+	if (ok)
+		printQr(qrcode);
+}
+
+
 int factorial(int num)
 {
 	if (num == 0)
@@ -149,6 +192,8 @@ void ingresar(char *cad)
 int main()
 {
 	char *cad = (char*)malloc(75 * sizeof(char));
+	char *cad1 = (char*)malloc(75 * sizeof(char));
+	char *QR = (char*)malloc(75 * sizeof(char));
 	char *ptr;
 	int val = 0;
 	float res=0, num, trigo;
@@ -157,6 +202,8 @@ int main()
 	Pila *numero = new Pila();
 	Pila *signo = new Pila();
 	ingresar(cad);
+	strcpy(cad1, cad);
+	strcpy(QR, cad);
 	while (strcmp(cad, "") != 0)
 	{
 		val++;
@@ -348,64 +395,41 @@ int main()
 		signo = signo->pop(signo);
 	}
 
-	/*while(sig!='\0')
-	{
-		i++;
-		sig = signo->getsig(signo);
-		switch (sig)
-		{
-			case '+':
-			{
-				if (i == 0)
-				{
-					res = numero->getnum(numero);
-					numero = numero->pop(numero);
-					//num = numero->getnum(numero);
-					res += num;
-				}
-			}
-			case '-':
-			{
-				if (i == 0)
-				{
-					res = numero->getnum(numero);
-					numero = numero->pop(numero);
-					num = numero->getnum(numero);
-					res -= num;
-				}
-			}
-			case '*':
-			{
-				if (i == 0)
-				{
-					res = numero->getnum(numero);
-					numero = numero->pop(numero);
-					num = numero->getnum(numero);
-					res *= num;
-				}
-			}
-			case '/':
-			{
-				if (i == 0)
-				{
-					res = numero->getnum(numero);
-					numero = numero->pop(numero);
-					num = numero->getnum(numero);
-					if (num == 0)
-					{
-						printf("\nLAS OPERACIONES INGRESADAS NO SON VALIDAS\n");
-					}
-					else
-					{
-						res /= num;
-					}
-				}
-			}
-			default:
-				break;
-		}
-		signo = signo->pop(signo);
-	} */
-	printf("\nResultado de la polaca: %.2f", res);
+	std::string str=to_string(res);
+	char *aux1 = _strdup(str.c_str());
+	strcat(QR, " = ");
+	strcat(QR,aux1);
+	printf("\nOperacion %s",QR);
+	printf("\nResultado de la polaca: %.2f\n\n", res);
 	system("pause");
+	printf("\n\t\t\t\tQR");
+	generarQr(QR);
+	system("pause");
+	//txt
+	ofstream datos("Operaciones.txt");
+	if (QR == NULL) {
+		printf("No hay operaciones ingresadas!\n\n");
+		datos << "No hay  operaciones ingresadas!\n\n" << endl;
+	}
+	else
+	{
+		datos << "\t\t\tOPERACACIONES\n" << endl;
+		datos << "\nSerie ingresada de la Polaca: " << cad1 << endl;
+		datos << "\nNotacion prefija polaca: " << QR << endl;
+		datos.close();
+	}
+	//pdf
+	int imp;
+	system("cls");
+	imp = PDF();
+	if (imp == 1)
+	{
+		ofstream datos;
+		datos.open("Operaciones.txt", ios::out | ios::app);
+		tifstream in(TEXT("Operaciones.txt"));
+		PrintFile(in);
+		ShellExecute(NULL, TEXT("open"), TEXT("D:\\TERCER LV\\Estructura de Datos\\SegundoParcial\\PolacaPrefija\\PolacaPrefija\\Operaciones.pdf"), NULL, NULL, SW_SHOWNORMAL);
+	}
+	system("pause");
+	_getch;
 }

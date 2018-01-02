@@ -1,0 +1,6 @@
+			OPERACACIONES
+
+
+Serie ingresada de la Polaca: %s* + 1 2 3
+
+Notacion prefija polaca: %s* + 1 2 3 = 9.000000
