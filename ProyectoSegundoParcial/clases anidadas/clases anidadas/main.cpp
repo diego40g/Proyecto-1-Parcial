@@ -26,15 +26,22 @@ Carrera: Ingenieria en Sitemas e Informatica
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <iostream>
+#include <Windows.h>
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <string>
 #include <conio.h>
+#include <stdlib.h>
+#include <time.h> 
+#include <string.h>
+#include <string>
+#include <MMsystem.h>
+#include <ctype.h>
+#include <fstream>
+#include <iomanip>
 #include <windows.h>
 #include "qrcodegen.h"
 #include "PDF.h"
 #include "Pila.h"
+
 using namespace std;
 HANDLE hStdin;
 DWORD fdwSaveOldMode;
@@ -68,6 +75,7 @@ void color(int X)
 {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), X);
 }
+
 void encabezado()
 {
 	printf("\tUNIVERSIDAD DE LAS FUERZAS ARMADAS \"ESPE\"\n");
@@ -89,66 +97,87 @@ void menu(int y)
 	gotoXY(25, 1);
 	printf("MENU");
 	int aux = 3; 
-	if (y == aux)
+	if ((y == 1) || (y == 3) || (y == 5) || (y == 7) || (y == 9) || (y == 11) || (y == 13))
 	{
-		color(112);
+		if (y == 1)
+		{
+			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\SegundoParcial\\clases anidadas\\clases anidadas\\Audio Inicio\\Introduccion.wav"), NULL, SND_ASYNC);
+			color(112);
+		}
+
+		if (y == aux)
+		{
+			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\SegundoParcial\\clases anidadas\\clases anidadas\\Audio Inicio\\Prosfija.wav"), NULL, SND_ASYNC);
+			//PlaySound(TEXT("D:\\Universidad\\Programacion 1\\Traductor\\ZZ Top - La Grange.wav"), NULL, SND_ASYNC); 	
+			color(112);
+		}
+		else
+		{
+			color(07);
+		}
+		gotoXY(13, aux);
+		printf("\xDB Calculo de la Polaca en Posfijo"); aux += 2;
+		if (y == aux)
+		{
+			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\SegundoParcial\\clases anidadas\\clases anidadas\\Audio Inicio\\Prefija.wav"), NULL, SND_ASYNC);
+			color(112);
+		}
+		else
+		{
+			color(07);
+		}
+		gotoXY(13, aux);
+		printf("\xDB Calculo de la Polaca en Prefijo"); aux += 2;
+		if (y == aux)
+		{
+			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\SegundoParcial\\clases anidadas\\clases anidadas\\Audio Inicio\\pdf.wav"), NULL, SND_ASYNC);
+			color(112);
+		}
+		else
+		{
+			color(07);
+		}
+		gotoXY(13, aux);
+		printf("\xDB Generar archivo .pdf"); aux += 2;
+		if (y == aux)
+		{
+			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\SegundoParcial\\clases anidadas\\clases anidadas\\Audio Inicio\\ayuda.wav"), NULL, SND_ASYNC);
+			color(112);
+		}
+		else
+		{
+			color(07);
+		}
+		gotoXY(13, aux);
+		printf("\xDB Archivo de ayuda"); aux += 2;
+		if (y == aux)
+		{
+			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\SegundoParcial\\clases anidadas\\clases anidadas\\Audio Inicio\\imagen.wav"), NULL, SND_ASYNC);
+			color(112);
+		}
+		else
+		{
+			color(07);
+		}
+		gotoXY(13, aux);
+		printf("\xDB Imagen del Grupo"); aux += 2;
+		if (y == aux)
+		{
+			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\SegundoParcial\\clases anidadas\\clases anidadas\\Audio Inicio\\salir.wav"), NULL, SND_ASYNC);
+			color(112);
+		}
+		else
+		{
+			color(07);
+		}
+		gotoXY(13, aux);
+		printf("\xDB Salir");
 	}
 	else
 	{
-		color(07);
+		color(00);
+		PlaySound(NULL, NULL, 0);
 	}
-	gotoXY(13, aux);
-	printf("\xDB Calculo de la Polaca en Posfijo"); aux += 2;
-	if (y == aux)
-	{
-		color(112);
-	}
-	else
-	{
-		color(07);
-	}
-	gotoXY(13, aux);
-	printf("\xDB Calculo de la Polaca en Prefijo"); aux += 2;
-	if (y == aux)
-	{
-		color(112);
-	}
-	else
-	{
-		color(07);
-	}
-	gotoXY(13, aux);
-	printf("\xDB Generar archivo .pdf"); aux += 2;
-	if (y == aux)
-	{
-		color(112);
-	}
-	else
-	{
-		color(07);
-	}
-	gotoXY(13, aux);
-	printf("\xDB Archivo de ayuda"); aux += 2;
-	if (y == aux)
-	{
-		color(112);
-	}
-	else
-	{
-		color(07);
-	}
-	gotoXY(13, aux);
-	printf("\xDB Imagen del Grupo"); aux += 2;
-	if (y == aux)
-	{
-		color(112);
-	}
-	else
-	{
-		color(07);
-	}
-	gotoXY(13, aux);
-	printf("\xDB Salir"); 
 }
 
 void ingresar(char *cad)
