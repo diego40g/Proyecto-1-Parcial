@@ -38,4 +38,22 @@ Expresion prefija:	*2  / 1  2
 2(auxPila),/ *(Pila)
 /(auxPila),*(Pila)
 *(auxPila),(Pila)
-El resultado es:	1.000000
+El resultado es:	1.000000EXPRESION: 1cos(0)
+
+Expresion Posfija:	1cos 0 
+1cos(auxPila),0 (Pila)
+0(auxPila),(Pila)EXPRESION: 1sin(90)
+
+Expresion Posfija:	1sin 90 
+1sin(auxPila),90 (Pila)
+90(auxPila),(Pila)
+El resultado es:	 90.000000EXPRESION: 1tan(45)
+
+Expresion Posfija:	1tan 45 
+1tan(auxPila),45 (Pila)
+45(auxPila),(Pila)
+El resultado es:	 45.000000EXPRESION: 2cos(0)
+
+Expresion Posfija:	2cos 0 
+2cos(auxPila),0 (Pila)
+0(auxPila),(Pila)
