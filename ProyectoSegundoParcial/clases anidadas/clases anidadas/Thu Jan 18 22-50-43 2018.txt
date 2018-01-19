@@ -1,0 +1,41 @@
+EXPRESION: 11+3
+EXPRESION: 11+3
+Expresion Posfija:	11 3 +
+11(auxPila),3 +(Pila)
+3(auxPila),+(Pila)
++(auxPila),(Pila)
+El resultado es:	 14.000000
+Expresion: 9/8*3
+Expresion prefija:	/9 * 8  3 
+9(auxPila),8 / 3 *(Pila)
+8(auxPila),/ 3 *(Pila)
+/(auxPila),3 *(Pila)
+3(auxPila),*(Pila)
+*(auxPila),(Pila)
+El resultado es:	3.375000EXPRESION: 1cos(0)
+El resultado es:	3.375000EXPRESION: 1cos(0)
+Expresion Posfija:	1cos 0 
+1cos(auxPila),0 (Pila)
+0(auxPila),(Pila)EXPRESION: cos(0)
+0(auxPila),(Pila)EXPRESION: cos(0)
+Expresion Posfija:	cos 0 
+0(auxPila),(Pila)
+El resultado es:	 1.000000EXPRESION: 2cos(0)
+El resultado es:	 1.000000EXPRESION: 2cos(0)
+Expresion Posfija:	2cos 0 
+2cos(auxPila),0 (Pila)
+0(auxPila),(Pila)EXPRESION: 2(cos(0))
+0(auxPila),(Pila)EXPRESION: 2(cos(0))
+Expresion Posfija:	2 cos 0 *
+2(auxPila),cos 0 *(Pila)
+0(auxPila),*(Pila)
+*(auxPila),(Pila)
+El resultado es:	 2.000000
+Expresion: 2(1/2)
+Expresion prefija:	*2  / 1  2  
+2(auxPila),1 2 / *(Pila)
+1(auxPila),2 / *(Pila)
+2(auxPila),/ *(Pila)
+/(auxPila),*(Pila)
+*(auxPila),(Pila)
+El resultado es:	1.000000

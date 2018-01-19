@@ -1,0 +1,9 @@
+				OPERACIONES REALIZADAS
+Expresion infija:	2(cos(0))
+2*(cos(0)) 
+2 * ( cos ( 0 ) ) 
+Expresion Posfija:	2 cos 0 *
+2(auxPila),cos 0 *(Pila)
+0(auxPila),*(Pila)
+*(auxPila),(Pila)
+El resultado es:	 2.000000

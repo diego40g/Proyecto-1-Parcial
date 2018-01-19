@@ -69,6 +69,11 @@ float Pila::getnum(Pila *Nuevo)
 	return Nuevo->num;
 }
 
+/*float *Pila::getdir(Pila * Nuevo)
+{
+	return *Nuevo->num;
+}*/
+
 char Pila::getsig(Pila *Nuevo)
 {
 	char cad = Nuevo->dato[0];

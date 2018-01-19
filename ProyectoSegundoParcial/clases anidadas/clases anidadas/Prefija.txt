@@ -1,0 +1,9 @@
+				OPERACIONES REALIZADAS
+Expresion infija:	2(1/2)
+Expresion prefija:	*2  / 1  2  
+2(auxPila),1 2 / *(Pila)
+1(auxPila),2 / *(Pila)
+2(auxPila),/ *(Pila)
+/(auxPila),*(Pila)
+*(auxPila),(Pila)
+El resultado es:	1.000000

@@ -1,0 +1,15 @@
+EXPRESION: 11+3
+EXPRESION: 11+3
+Expresion Posfija:	11 3 +
+11(auxPila),3 +(Pila)
+3(auxPila),+(Pila)
++(auxPila),(Pila)
+El resultado es:	 14.000000
+Expresion: 9/8*3
+Expresion prefija:	/9 * 8  3 
+9(auxPila),8 / 3 *(Pila)
+8(auxPila),/ 3 *(Pila)
+/(auxPila),3 *(Pila)
+3(auxPila),*(Pila)
+*(auxPila),(Pila)
+El resultado es:	3.375000
