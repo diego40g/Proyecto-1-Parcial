@@ -1,5 +1,5 @@
 EXPRESION: 11+3
-
+EXPRESION: 11+3
 Expresion Posfija:	11 3 +
 11(auxPila),3 +(Pila)
 3(auxPila),+(Pila)
@@ -13,19 +13,19 @@ Expresion prefija:	/9 * 8  3
 3(auxPila),*(Pila)
 *(auxPila),(Pila)
 El resultado es:	3.375000EXPRESION: 1cos(0)
-
+El resultado es:	3.375000EXPRESION: 1cos(0)
 Expresion Posfija:	1cos 0 
 1cos(auxPila),0 (Pila)
 0(auxPila),(Pila)EXPRESION: cos(0)
-
+0(auxPila),(Pila)EXPRESION: cos(0)
 Expresion Posfija:	cos 0 
 0(auxPila),(Pila)
 El resultado es:	 1.000000EXPRESION: 2cos(0)
-
+El resultado es:	 1.000000EXPRESION: 2cos(0)
 Expresion Posfija:	2cos 0 
 2cos(auxPila),0 (Pila)
 0(auxPila),(Pila)EXPRESION: 2(cos(0))
-
+0(auxPila),(Pila)EXPRESION: 2(cos(0))
 Expresion Posfija:	2 cos 0 *
 2(auxPila),cos 0 *(Pila)
 0(auxPila),*(Pila)
@@ -39,25 +39,25 @@ Expresion prefija:	*2  / 1  2
 /(auxPila),*(Pila)
 *(auxPila),(Pila)
 El resultado es:	1.000000EXPRESION: 1cos(0)
-
+El resultado es:	1.000000EXPRESION: 1cos(0)
 Expresion Posfija:	1cos 0 
 1cos(auxPila),0 (Pila)
 0(auxPila),(Pila)EXPRESION: 1sin(90)
-
+0(auxPila),(Pila)EXPRESION: 1sin(90)
 Expresion Posfija:	1sin 90 
 1sin(auxPila),90 (Pila)
 90(auxPila),(Pila)
 El resultado es:	 90.000000EXPRESION: 1tan(45)
-
+El resultado es:	 90.000000EXPRESION: 1tan(45)
 Expresion Posfija:	1tan 45 
 1tan(auxPila),45 (Pila)
 45(auxPila),(Pila)
 El resultado es:	 45.000000EXPRESION: 2cos(0)
-
+El resultado es:	 45.000000EXPRESION: 2cos(0)
 Expresion Posfija:	2cos 0 
 2cos(auxPila),0 (Pila)
 0(auxPila),(Pila)EXPRESION: 1+45sin(0)
-
+0(auxPila),(Pila)EXPRESION: 1+45sin(0)
 Expresion Posfija:	1 45 sin 0 * +
 1(auxPila),45 sin 0 * +(Pila)
 45(auxPila),sin 0 * +(Pila)
@@ -65,13 +65,13 @@ Expresion Posfija:	1 45 sin 0 * +
 *(auxPila),+(Pila)
 +(auxPila),(Pila)
 El resultado es:	 1.000000EXPRESION: 1+cos(0)
-
+El resultado es:	 1.000000EXPRESION: 1+cos(0)
 Expresion Posfija:	1 cos 0 +
 1(auxPila),cos 0 +(Pila)
 0(auxPila),+(Pila)
 +(auxPila),(Pila)
 El resultado es:	 2.000000EXPRESION: 1+45cos(0)
-
+El resultado es:	 2.000000EXPRESION: 1+45cos(0)
 Expresion Posfija:	1 45 cos 0 * +
 1(auxPila),45 cos 0 * +(Pila)
 45(auxPila),cos 0 * +(Pila)
@@ -79,13 +79,13 @@ Expresion Posfija:	1 45 cos 0 * +
 *(auxPila),+(Pila)
 +(auxPila),(Pila)
 El resultado es:	 46.000000EXPRESION: 2+2
-
+El resultado es:	 46.000000EXPRESION: 2+2
 Expresion Posfija:	2 2 +
 2(auxPila),2 +(Pila)
 2(auxPila),+(Pila)
 +(auxPila),(Pila)
 El resultado es:	 4.000000EXPRESION: 2cos(tan(sin(0)))-1
-
+El resultado es:	 4.000000EXPRESION: 2cos(tan(sin(0)))-1
 Expresion Posfija:	2 cos tan sin 0 * 1 -
 2(auxPila),cos tan sin 0 * 1 -(Pila)
 0(auxPila),* 1 -(Pila)
@@ -93,19 +93,19 @@ Expresion Posfija:	2 cos tan sin 0 * 1 -
 1(auxPila),-(Pila)
 -(auxPila),(Pila)
 El resultado es:	 1.000000EXPRESION: 2+2
-
+El resultado es:	 1.000000EXPRESION: 2+2
 Expresion Posfija:	2 2 +
 2(auxPila),2 +(Pila)
 2(auxPila),+(Pila)
 +(auxPila),(Pila)
 El resultado es:	 4.000000EXPRESION: 2+2
-
+El resultado es:	 4.000000EXPRESION: 2+2
 Expresion Posfija:	2 2 +
 2(auxPila),2 +(Pila)
 2(auxPila),+(Pila)
 +(auxPila),(Pila)
 El resultado es:	 4.000000EXPRESION: 9.5+4.8*sin(45)/3.5
-
+El resultado es:	 4.000000EXPRESION: 9.5+4.8*sin(45)/3.5
 Expresion Posfija:	9.5 4.8 sin 45 * 3.5 / +
 9.5(auxPila),4.8 sin 45 * 3.5 / +(Pila)
 4.8(auxPila),sin 45 * 3.5 / +(Pila)
@@ -115,27 +115,9 @@ Expresion Posfija:	9.5 4.8 sin 45 * 3.5 / +
 /(auxPila),+(Pila)
 +(auxPila),(Pila)
 El resultado es:	 10.469746EXPRESION: .3+.5
-
+El resultado es:	 10.469746EXPRESION: .3+.5
 Expresion Posfija:	.3 .5 +
 .3(auxPila),.5 +(Pila)
 .5(auxPila),+(Pila)
 +(auxPila),(Pila)
-El resultado es:	 0.800000EXPRESION: ((3+5)*sin(45))+3*2
-
-Expresion Posfija:	 3 5 + sin 45 * 3 2 * +
- 3(auxPila),5 + sin 45 * 3 2 * +(Pila)
-5(auxPila),+ sin 45 * 3 2 * +(Pila)
-+(auxPila),sin 45 * 3 2 * +(Pila)
-45(auxPila),* 3 2 * +(Pila)
-*(auxPila),3 2 * +(Pila)
-3(auxPila),2 * +(Pila)
-2(auxPila),* +(Pila)
-*(auxPila),+(Pila)
-+(auxPila),(Pila)
-El resultado es:	 11.656851EXPRESION: 1+1
-
-Expresion Posfija:	1 1 +
-1(auxPila),1 +(Pila)
-1(auxPila),+(Pila)
-+(auxPila),(Pila)
-El resultado es:	 2.000000
+El resultado es:	 0.800000

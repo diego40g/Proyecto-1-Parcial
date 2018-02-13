@@ -1,7 +1,9 @@
 				OPERACIONES REALIZADAS
-Expresion infija:	2cos(0)
-2cos(0) 
-2cos ( 0 ) 
-Expresion Posfija:	2cos 0 
-2cos(auxPila),0 (Pila)
-0(auxPila),(Pila)
+Expresion infija:	1+1
+1+1 
+1 + 1 
+Expresion Posfija:	1 1 +
+1(auxPila),1 +(Pila)
+1(auxPila),+(Pila)
++(auxPila),(Pila)
+El resultado es:	 2.000000

@@ -80,9 +80,9 @@ void color(int X)
 void encabezado()
 {
 	printf("\tUNIVERSIDAD DE LAS FUERZAS ARMADAS \"ESPE\"\n");
-	printf("\n\t\tPROYECTO PRIMER PARCIAL\n");
+	printf("\n\t\tPROYECTO SEGUNDO PARCIAL\n");
 	printf("\n\t\t  ESTRUCTURA DE DATOS\n");
-	printf("\n\t\t      PARQUEADERO\n");
+	printf("\n\t\t      POLACA\n");
 	printf("\n\tAUTORES: Michael Morales\n");
 	printf("\t         Diego Paz\n");
 	printf("\n\tNRC: 2479\n");
@@ -98,7 +98,7 @@ void menu(int y)
 	gotoXY(25, 1);
 	printf("MENU");
 	int aux = 3; 
-	if ((y == 1) || (y == 3) || (y == 5) || (y == 7) || (y == 9) || (y == 11) || (y == 13)||(y==15)||(y==17))
+	if ((y == 1) || (y == 3) || (y == 5) || (y == 7) || (y == 9) || (y == 11) || (y == 13)||(y==15)||(y==17)||(y==19))
 	{
 		if (y == 1)
 		{
@@ -184,6 +184,17 @@ void menu(int y)
 		}
 		gotoXY(13, aux); aux += 2;
 		printf("\xDB Python");
+		if (y == aux)
+		{
+			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\SegundoParcial\\clases anidadas\\clases anidadas\\Audio Inicio\\mongo.wav"), NULL, SND_ASYNC);
+			color(112);
+		}
+		else
+		{
+			color(07);
+		}
+		gotoXY(13, aux); aux += 2;
+		printf("\xDB Mongo");
 		if (y == aux)
 		{
 			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\SegundoParcial\\clases anidadas\\clases anidadas\\Audio Inicio\\salir.wav"), NULL, SND_ASYNC);
@@ -565,8 +576,17 @@ void audio(char *cad)
 	}
 }
 
+void fun(int *a)
+{
+	*a++;
+}
 int main()
 {
+	
+	//	encabezado();
+	
+	//system("pause");
+	system("cls");
 	color(07);
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
 	DWORD cNumRead, fdwMode, i;
@@ -799,6 +819,11 @@ ingreso:
 			}
 			if (*(expr+i) == ')') {
 				*(expresion+j) = *(expr+i);
+				j++;
+			}
+			if ((*(expr + i) == '0' || *(expr + i) == '1' || *(expr + i) == '2' || *(expr + i) == '3' || *(expr + i) == '4' || *(expr + i) == '5' || *(expr + i) == '6' || *(expr + i) == '7' || *(expr + i) == '8' || *(expr + i) == '9') && (*(expr + i + 1) == 's' || *(expr + i + 1) == 'c' || *(expr + i + 1) == 't'))
+			{
+				*(expresion + j) = '*';
 				j++;
 			}
 			if (*(expr+i) != '('&&*(expr+i) != ')'&&*(expr+i) != 'n'&&*(expr+i) != 's'&&*(expr+i) != '+'&&*(expr+i) != '-'&&*(expr+i) != '*'&&*(expr+i) != '/'&&*(expr+i + 1) == '(') 
@@ -1280,6 +1305,11 @@ ingreso:
 			if (*(expr+i) == ')') 
 			{
 				*(expresion+j) = *(expr+i);
+				j++;
+			}
+			if ((*(expr + i) == '0' || *(expr + i) == '1' || *(expr + i) == '2' || *(expr + i) == '3' || *(expr + i) == '4' || *(expr + i) == '5' || *(expr + i) == '6' || *(expr + i) == '7' || *(expr + i) == '8' || *(expr + i) == '9') && (*(expr + i + 1) == 's' || *(expr + i + 1) == 'c' || *(expr + i + 1) == 't'))
+			{
+				*(expresion + j) = '*';
 				j++;
 			}
 			if (*(expr+i) != '('&&*(expr+i) != ')'&&*(expr+i) != 'n'&&*(expr+i) != 's'&&*(expr+i) != '+'&&*(expr+i) != '-'&&*(expr+i) != '*'&&*(expr+i) != '/'&&*(expr+i + 1) == '(') 
@@ -1866,6 +1896,14 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 		main();
 	}
 	if (y == 17 && mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
+	{
+		system("cls");
+		system("java -jar conexion_mongo.jar");
+		system("pause");
+		system("cls");
+		main();
+	}
+	if (y == 19 && mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
 	{
 		exit(0);
 	}
