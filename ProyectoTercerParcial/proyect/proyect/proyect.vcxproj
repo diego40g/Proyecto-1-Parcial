@@ -181,10 +181,18 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="avl.cpp" />
+    <ClCompile Include="b.cpp" />
+    <ClCompile Include="bmas.cpp" />
+    <ClCompile Include="btree.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="qrcodegen.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="avl.h" />
+    <ClInclude Include="b.h" />
+    <ClInclude Include="bmas.h" />
+    <ClInclude Include="btree.h" />
     <ClInclude Include="PDF.h" />
     <ClInclude Include="qrcodegen.h" />
   </ItemGroup>

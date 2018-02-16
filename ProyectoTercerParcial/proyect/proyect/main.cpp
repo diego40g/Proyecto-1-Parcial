@@ -34,16 +34,21 @@ Carrera: Ingenieria en Sitemas e Informatica
 #include<string.h>
 #include<string>
 #include<time.h>
+#include"bmas.h"
 #include<iostream>
 #include"qrcodegen.h"
 #include"PDF.h"
+#include"b.h"
+#include"btree.h"
+#include"avl.h"
+
 #include<allegro5/allegro.h> // Librería inicial de Allegro
 #include<allegro5/allegro_primitives.h> // Addon de primitivas (figuras)
 #include<allegro5/allegro_font.h>
 #include<allegro5/allegro_ttf.h>
 #define VENTANA_X 750
 #define VENTANA_Y 450
-
+//int x = 130, y = 0;
 // Redefinición de tipos
 typedef ALLEGRO_DISPLAY aDisplay;
 
@@ -101,21 +106,6 @@ void gotoxy(int x, int y) {
 	pos.Y = y;
 	SetConsoleCursorPosition(cualquiera, pos);
 }
-struct nodo
-{
-	int nro;
-	struct nodo *izq, *der;
-};
-typedef struct nodo *ABB;
-ABB crearNodo(int x)
-{
-	ABB nuevoNodo = new(struct nodo);
-	nuevoNodo->nro = x;
-	nuevoNodo->izq = NULL;
-	nuevoNodo->der = NULL;
-
-	return nuevoNodo;
-}
 void membrete() {
 	printf("\t\tUNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE\n");
 	printf("Integrantes: Michael Morales\tDiego Paz\n");
@@ -123,8 +113,157 @@ void membrete() {
 	printf("Profesor:Fernando Solis\n");
 	printf("Carrera: Ingenieria en Istemas e Informatica\n\n");
 }
-void color(int X)
+
+
+//-----------------------
+struct nodoBinario
 {
+	int nro;
+	struct nodoBinario *izq, *der;
+};
+typedef struct nodoBinario *ABB;
+ABB crearNodo(int x)
+{
+	ABB nuevoNodo = new(struct nodoBinario);
+	nuevoNodo->nro = x;
+	nuevoNodo->izq = NULL;
+	nuevoNodo->der = NULL;
+
+	return nuevoNodo;
+}
+void insertar(ABB &arbol, int x)
+{
+	if (arbol == NULL)
+	{
+		arbol = crearNodo(x);
+	}
+	else if (x < arbol->nro)
+		insertar(arbol->izq, x);
+	else if (x > arbol->nro)
+		insertar(arbol->der, x);
+}
+
+//-------------------------
+void preOrden(ABB arbol, ALLEGRO_FONT *font)
+{
+	if (arbol != NULL)
+	{
+		VX += 5;
+		al_draw_textf(font, al_map_rgb_f(0, 0, 0), VX, VY, 0, "%d ", arbol->nro);
+		VX += 10;
+		preOrden(arbol->izq, font);
+		preOrden(arbol->der, font);
+	}
+}
+
+void enOrden(ABB arbol, ALLEGRO_FONT *font)
+{
+	if (arbol != NULL)
+	{
+		enOrden(arbol->izq, font);
+		VX += 5;
+		al_draw_textf(font, al_map_rgb_f(0, 0, 0), VX, VY, 0, "%d ", arbol->nro);
+		VX += 10;
+		enOrden(arbol->der, font);
+	}
+}
+
+void postOrden(ABB arbol, ALLEGRO_FONT *font)
+{
+	if (arbol != NULL)
+	{
+		postOrden(arbol->izq, font);
+		postOrden(arbol->der, font);
+		VX += 5;
+		al_draw_textf(font, al_map_rgb_f(0, 0, 0), VX, VY, 0, "%d ", arbol->nro);
+		VX += 10;
+	}
+}
+
+void limpiar(char *cad, int tam) {
+	for (int i = 0; i<tam; i++) {
+		*(cad + i) = '\0';
+	}
+}
+
+void FOR(char *espacios, int n, int i)
+{
+	if (i == n)
+	{
+		return;
+	}
+	else
+	{
+		strcat(espacios, "   ");
+		FOR(espacios, n, ++i);
+	}
+}
+int cont = 0;
+int verArbol(ABB arbol, int n, ALLEGRO_FONT *font, char* espacios, int **mat)
+{
+	//int aux = *i;
+	if (arbol == NULL) {
+		al_flip_display(); // Dibujar en pantalla todo lo almacenado en el buffer, en este caso solamente está el círculo de arriba
+		return cont;
+	}
+	else {
+		*(*(mat + 0) + cont) = n * 9;
+		printf("%d=%d->%d=%d//%d\t%d\n", *(*(mat + 0) + cont), n * 9, *(*(mat + 1) + cont), VY, cont, arbol->nro);
+		cont++;
+		// j+=15;
+		//*i+=1;
+		verArbol(arbol->der, n + 1, font, espacios, mat);
+		limpiar(espacios, 100);
+		FOR(espacios, n, 0);
+
+		al_draw_circle((n * 9) + 10, VY + 6, 10, al_map_rgb_f(1, 0, 0), 2);
+		al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "%s  %d", espacios, arbol->nro);//es como printf
+
+
+
+																															   //coordenadas de Y no esta bien xD
+		*(*(mat + 1) + cont - 1) = VY;
+
+
+
+		VY += 30;
+
+		verArbol(arbol->izq, n + 1, font, espacios, mat);
+	}
+}
+int verif(int *cad,int tam){
+	int verificar=0,cont=0;
+	for(int i=0;i<tam;i++){
+		for(int j=i+1;j<tam;j++){
+			if(*(cad+i)==*(cad+j)){
+				verificar=0;
+				return verificar;
+			}
+		}
+	}
+	for(int i=0;i<tam;i++){
+		if(*(cad+i)<*(cad+i+1)){
+			verificar=2;
+			cont++;
+		}
+	}
+	printf("\ncont%d\n",cont);
+	if(cont==tam-1){
+		verificar = 1;
+	}
+		if((*(cad+tam-1)<*(cad+tam-2))&&(*(cad+0)<*(cad+tam-1))){
+			verificar=3;
+		}
+
+	return verificar;
+}
+//---------------------------------------------para B----------
+
+
+//--------------------------------------Hasta aqui para B--------------------------
+
+
+void color(int X){
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), X);
 }
 void menu(int y) 
@@ -269,107 +408,6 @@ void menu(int y)
 		PlaySound(NULL, NULL, 0);
 	}
 }
-void insertar(ABB &arbol, int x)
-{
-	if (arbol == NULL)
-	{
-		arbol = crearNodo(x);
-	}
-	else if (x < arbol->nro)
-		insertar(arbol->izq, x);
-	else if (x > arbol->nro)
-		insertar(arbol->der, x);
-}
-void preOrden(ABB arbol, ALLEGRO_FONT *font)
-{
-	if (arbol != NULL)
-	{
-		VX += 5;
-		al_draw_textf(font, al_map_rgb_f(0, 0, 0), VX/*posicion en x*/, VY/*posicion en y*/, 0, "%d ", arbol->nro);//es como printf
-		VX += 10;
-		//y+=15;
-		// printf("%d ",arbol->nro);
-		preOrden(arbol->izq, font);
-		preOrden(arbol->der, font);
-	}
-}
-void enOrden(ABB arbol, ALLEGRO_FONT *font)
-{
-	if (arbol != NULL)
-	{
-		enOrden(arbol->izq, font);
-		VX += 5;
-		al_draw_textf(font, al_map_rgb_f(0, 0, 0), VX/*posicion en x*/, VY/*posicion en y*/, 0, "%d ", arbol->nro);//es como printf
-																												 // y+=15;
-		VX += 10;
-		//  printf("%d ",arbol->nro);
-		enOrden(arbol->der, font);
-	}
-}
-void postOrden(ABB arbol, ALLEGRO_FONT *font)
-{
-	if (arbol != NULL)
-	{
-		postOrden(arbol->izq, font);
-		postOrden(arbol->der, font);
-		// printf("%d ",arbol->nro);
-		VX += 5;
-		al_draw_textf(font, al_map_rgb_f(0, 0, 0), VX/*posicion en x*/, VY/*posicion en y*/, 0, "%d ", arbol->nro);//es como printf
-		VX += 10;
-		// y+=15;
-
-	}
-}
-void limpiar(char *cad, int tam) {
-	for (int i = 0; i<tam; i++) {
-		*(cad + i) = '\0';
-	}
-}
-void FOR(char *espacios, int n, int i)
-{
-	if (i == n)
-	{
-		return;
-	}
-	else
-	{
-		strcat(espacios, "   ");
-		FOR(espacios, n, ++i);
-	}
-}
-int cont = 0;
-int verArbol(ABB arbol, int n, ALLEGRO_FONT *font, char* espacios, int **mat)
-{
-	//int aux = *i;
-	if (arbol == NULL) {
-		al_flip_display(); // Dibujar en pantalla todo lo almacenado en el buffer, en este caso solamente está el círculo de arriba
-		return cont;
-	}
-	else {
-		*(*(mat + 0) + cont) = n * 9;
-		printf("%d=%d->%d=%d//%d\t%d\n", *(*(mat + 0) + cont), n * 9, *(*(mat + 1) + cont), VY, cont, arbol->nro);
-		cont++;
-		// j+=15;
-		//*i+=1;
-		verArbol(arbol->der, n + 1, font, espacios, mat);
-		limpiar(espacios, 100);
-		FOR(espacios, n, 0);
-		
-		al_draw_circle((n*9)+10, VY+6, 10, al_map_rgb_f(1, 0, 0), 2);
-		al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "%s  %d", espacios, arbol->nro);//es como printf
-		
-
-
-		//coordenadas de Y no esta bien xD
-		*(*(mat + 1) + cont-1) = VY;
-
-
-
-		VY += 30;
-		
-		verArbol(arbol->izq, n + 1, font, espacios, mat);
-	}
-}
 void ingresar(char *cad)
 {
 	int c, i = 0;
@@ -406,32 +444,7 @@ int *tok(char *cad, int *tam)
 	*tam = i;
 	return res;
 }
-int verif(int *cad, int tam) {
-	int verificar = 0, cont = 0;
-	for (int i = 0; i<tam; i++) {
-		for (int j = i + 1; j<tam; j++) {
-			if (*(cad + i) == *(cad + j)) {
-				verificar = 0;
-				return verificar;
-			}
-		}
-	}
-	for (int i = 0; i<tam; i++) {
-		if (*(cad + i)<*(cad + i + 1)) {
-			verificar = 2;
-			cont++;
-		}
-	}
-	printf("\ncont%d\n", cont);
-	if (cont == tam - 1) {
-		verificar = 1;
-	}
-	if ((*(cad + tam - 1)<*(cad + tam - 2)) && (*(cad + 0)<*(cad + tam - 1))) {
-		verificar = 3;
-	}
 
-	return verificar;
-}
 void prueba(ALLEGRO_FONT *font) {
 	colorearPantalla();
 	int fps = 50;
@@ -450,62 +463,62 @@ void audio(char *cad)
 		{
 		case '1':
 		{
-			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\1.wav"), NULL, SND_SYNC);
+			//PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\1.wav"), NULL, SND_SYNC);
 			break;
 		}
 		case '2':
 		{
-			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\2.wav"), NULL, SND_SYNC);
+			//PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\2.wav"), NULL, SND_SYNC);
 			break;
 		}
 		case '3':
 		{
-			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\3.wav"), NULL, SND_SYNC);
+			//PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\3.wav"), NULL, SND_SYNC);
 			break;
 		}
 		case '4':
 		{
-			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\4.wav"), NULL, SND_SYNC);
+			//PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\4.wav"), NULL, SND_SYNC);
 			break;
 		}
 		case '5':
 		{
-			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\5.wav"), NULL, SND_SYNC);
+			//PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\5.wav"), NULL, SND_SYNC);
 			break;
 		}
 		case '6':
 		{
-			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\6.wav"), NULL, SND_SYNC);
+			//PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\6.wav"), NULL, SND_SYNC);
 			break;
 		}
 		case '7':
 		{
-			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\7.wav"), NULL, SND_SYNC);
+			//PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\7.wav"), NULL, SND_SYNC);
 			break;
 		}
 		case '8':
 		{
-			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\8.wav"), NULL, SND_SYNC);
+			//PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\8.wav"), NULL, SND_SYNC);
 			break;
 		}
 		case '9':
 		{
-			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\9.wav"), NULL, SND_SYNC);
+			//PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\9.wav"), NULL, SND_SYNC);
 			break;
 		}
 		case '0':
 		{
-			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\0.wav"), NULL, SND_SYNC);
+			//PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\0.wav"), NULL, SND_SYNC);
 			break;
 		}
 		case ',':
 		{
-			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\,.wav"), NULL, SND_SYNC);
+			//PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\,.wav"), NULL, SND_SYNC);
 			break;
 		}
 		default:
 		{
-			PlaySound(NULL, NULL, 0);
+			//PlaySound(NULL, NULL, 0);
 			break;
 		}
 		}
@@ -629,23 +642,6 @@ void pdf1()
 	system("pause");
 	_getch;
 }
-int  AyudaF1()//23 esc y 13 intro
-{
-	int x;
-	int imp;
-	printf("\nPresione Enter ");
-	for (;; ) {
-		x = _getch();//captura la tecla de función ,pertenece a la libreria conio.h
-		if (x == 13)
-		{
-			imp = 1;
-			printf("\nGenerando...");
-			break;
-		}
-	}
-	return imp;
-}
-
 
 int main()
 {
@@ -773,7 +769,7 @@ int menuB()
 {
 	VY = 0;
 	const char *titulo = "MENU ARBOL BINARIO";
-	const char *opciones[] = { "Ingresar inOrden","Ingresar preOrden","Ingresar postOrden","Ingresar nodos para dibujar arbol","Salir" };
+	const char *opciones[] = { "Ingresar inOrden","Ingresar preOrden","Ingresar postOrden","Ingresar nodos para dibujar arbol","Regresar al menu" };
 	int n = 5;
 	int selec = 1;
 	int tecla;
@@ -855,12 +851,11 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 	} while (!Captured);
 
 	if (y == 3 && mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
-	{
-		system("cls");
-		printf("arbol binario");
-		
-		//char *QR = 
-
+	{/*
+	 BINARIO
+	 */
+		printf("\nArbol binario \n");
+		//----------------------------------------------------------------------
 		int raiz;
 		char *espacios = (char*)malloc(100 * sizeof(char));
 		limpiar(espacios, 100);
@@ -876,259 +871,137 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 	ini:
 		system("cls");
 		opc = menuB();
-		switch (opc) 
+		switch (opc)
 		{
-			case 1: 
+		case 1:
+		{
+			VX = 130;
+			arbol = NULL;
+			VY = 6;
+			system("cls");
+			printf(" Ingresar expresion y separe los numeros con \",\":  \n");
+			ingresar(cadena);
+			audio(cadena);
+			strcat(cadena, ",");
+			res = tok(cadena, &tam);
+			if (verif(res, tam) != 1)
 			{
-				VX = 130;
-				arbol = NULL;
-				VY = 6;
-				system("cls");
-				printf(" Ingresar expresion y separe los numeros con \",\":  \n");
-				ingresar(cadena);
-				audio(cadena);
-				strcat(cadena, ",");
-				res = tok(cadena, &tam);
-				if (verif(res, tam) != 1) 
+				if (verif(res, tam) == 0)
 				{
-					if (verif(res, tam) == 0) 
-					{
-						printf("\nCADENA MAL INGREADA...\n");
-					}
-					else 
-					{
-						printf("\nLA CADENA NO ESTA INGRESADA EN inOrden...\n");
-						system("pause");
-						goto ini;
-					}
+					printf("\nCADENA MAL INGREADA...\n");
 				}
-				else 
+				else
 				{
-					printf("\nIN ORDEN\n");
-					if (tam % 2 == 0) 
-					{
-						raiz = *(res + ((tam / 2) - 1));
-					}
-					else 
-					{
-						raiz = *(res + ((tam / 2)));
-					}
-					insertar(arbol, raiz);
-					printf("\n");
-					for (int i = 0; i<tam; i++)
-					{
-						val = *(res + i);
-						insertar(arbol, val);
-					}
-					printf("\n Mostrando ARBOL... \n\n");
+					printf("\nLA CADENA NO ESTA INGRESADA EN inOrden...\n");
 					system("pause");
-					inicializar();
-					al_init();
-					al_init_font_addon();
-					al_init_ttf_addon();
-					al_install_keyboard();
-					ALLEGRO_FONT *font = al_load_ttf_font("ARIAL.ttf", 11, 0);
-					int i, **mat = (int**)malloc(500 * sizeof(int));
-					for (i = 0; i < 50; i++)
-					{
-						*(mat + i) = (int*)malloc(50 * sizeof(int));
-					}
-					for (i = 0; i < 50; i++)
-					{
-						for (int j = 0; j < 50; j++)
-						{
-							*(*(mat + i) + j) = 0;
-						}
-					}
-					i = 0;
-					colorearPantalla();
-					i = verArbol(arbol, 0, font, espacios, mat);
-					int auxiliar = 0;
-					for (int j = 0; j < i; j++)
-					{
-						*(*(mat + 1) + j) = 6 + auxiliar;
-						auxiliar += 30;
-					}
-					VY += 20;
-					VX = 130;
-					al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "PRE ORDEN:");//es como printf
-					//printf("\n\n Pre Orden  :  ");
-					preOrden(arbol, font);
-					VY += 20;
-					VX = 130;
-					al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "POST ORDEN:");//es como printf
-					//printf("\n\n Post Orden :  ");
-					postOrden(arbol, font);
-					printf("MATRIZ \n");
-					for (int j = 0; j < i - 1; j++)
-					{
-						printf("%d=%d\n", *(*(mat + 0) + j), *(*(mat + 1) + j + 1));
-						al_draw_line(*(*(mat + 0) + j),  *(*(mat + 1) + j), *(*(mat + 0) + j + 1), *(*(mat + 1) + j + 1), al_map_rgb_f(0, 1, 0),2);
-					}
-					al_flip_display(); // Dibujar en pantalla todo lo almacenado en el buffer, en este caso solamente está el círculo de arriba
-					printf("\n");
-					system("pause");
-					finalizar(/*display*/);
-					system("pause");
+					goto ini;
+				}
 			}
-			goto ini;
-			break;
-			}
-			case 2: 
+			else
 			{
-				arbol = NULL;
-				VY = 6;
-				VX = 130;
-				system("cls");
-				printf(" Ingresar expresion y separe los numeros con \",\":  \n");
-				ingresar(cadena);
-				audio(cadena);
-				strcat(cadena, ",");
-				res = tok(cadena, &tam);
-				if (verif(res, tam) != 2) 
+				printf("\nIN ORDEN\n");
+				if (tam % 2 == 0)
 				{
-					if (verif(res, tam) == 0) 
-					{
-						printf("\nCADENA MAL INGREADA...\n");
-					}
-					else 
-					{
-						printf("\nLA CADENA NO ESTA INGRESADA EN preOrden...\n");
-						system("pause");
-						goto ini;
-					}
+					raiz = *(res + ((tam / 2) - 1));
 				}
-				else 
+				else
 				{
-					printf("\nPRE ORDEN\n");
-					printf("\n");
-					for (int i = 0; i<tam; i++)
-					{
-						val = *(res + i);
-						insertar(arbol, val);
-					}
-					printf("\n Mostrando ARBOL... \n\n");
-					system("pause");
-					inicializar();
-					al_init();
-					al_init_font_addon();
-					al_init_ttf_addon();
-					al_install_keyboard();
-					ALLEGRO_FONT *font = al_load_ttf_font("ARIAL.ttf", 11, 0);
-					ALLEGRO_BITMAP *text_img = al_create_bitmap(al_get_text_width(font, "PRIMERO"), al_get_font_ascent(font));	
-					colorearPantalla();
-					int i, **mat = (int**)malloc(500 * sizeof(int));
-					for (i = 0; i < 2; i++)
-					{
-						*(mat + i) = (int*)malloc(2 * sizeof(int));
-					}
-					i = 0;
-					i=verArbol(arbol, 0, font, espacios,mat);
-					VY += 20;
-					VX = 130;
-					al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "IN ORDEN:");//es como printf
-					printf("\n\n En orden   :  ");
-					enOrden(arbol, font);
-					VY += 20;
-					VX = 130;
-					al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "POST ORDEN:");//es como printf
-					printf("\n\n Post Orden :  ");
-					postOrden(arbol, font);
-					al_flip_display(); // Dibujar en pantalla todo lo almacenado en el buffer, en este caso solamente está el círculo de arriba
-					printf("\n");
-					system("pause");
-					finalizar(/*display*/);
+					raiz = *(res + ((tam / 2)));
 				}
-				goto ini;
-				break;
-			}
-			case 3: 
-			{
-				arbol = NULL;
-				VY = 6;
-				VX = 130;
-				system("cls");
-				printf(" Ingresar expresion y separe los numeros con \",\":  \n");
-				ingresar(cadena);
-				audio(cadena);
-				strcat(cadena, ",");
-				res = tok(cadena, &tam);
-				if (verif(res, tam) != 3) 
-				{
-					if (verif(res, tam) == 0) 
-					{
-						printf("\nCADENA MAL INGREADA...\n");
-						system("pause");
-					}
-					else 
-					{
-						printf("\nLA CADENA NO ESTA INGRESADA EN postOrden...\n");
-						system("pause");
-						goto ini;
-					}
-				}
-				else 
-				{
-					printf("\nPOST ORDEN\n");
-					printf("\n");
-					for (int i = tam - 1; i >= 0; i--)
-					{
-						val = *(res + i);
-						insertar(arbol, val);
-					}
-					printf("\n Mostrando ARBOL... \n\n");
-					system("pause");
-					inicializar();
-					al_init();
-					al_init_font_addon();
-					al_init_ttf_addon();
-					al_install_keyboard();
-					ALLEGRO_FONT *font = al_load_ttf_font("ARIAL.ttf", 11, 0);
-					ALLEGRO_BITMAP *text_img = al_create_bitmap(al_get_text_width(font, "PRIMERO"), al_get_font_ascent(font));
-					colorearPantalla();
-					int i, **mat = (int**)malloc(500 * sizeof(int));
-					for (i = 0; i < 2; i++)
-					{
-						*(mat + i) = (int*)malloc(2 * sizeof(int));
-					}
-					i = 0;
-					i=verArbol(arbol, 0, font, espacios,mat);
-					VY += 20;
-					VX = 130;
-					al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "IN ORDEN:");//es como printf
-					printf("\n\n En orden   :  ");
-					enOrden(arbol, font);
-					VY += 20;
-					VX = 130;
-					al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "PRE ORDEN:");//es como printf
-					printf("\n\n Pre Orden  :  ");
-					preOrden(arbol, font);
-					al_flip_display(); // Dibujar en pantalla todo lo almacenado en el buffer, en este caso solamente está el círculo de arriba
-					printf("\n");
-					system("pause");
-					finalizar(/*display*/);
-				}
-				goto ini;
-				break;
-			}
-			case 4: 
-			{
-				arbol = NULL;
-				VY = 6;
-				VX = 130;
-				system("cls");
-				printf(" Ingresar expresion y separe los numeros con \",\":  \n");
-				ingresar(cadena);
-				audio(cadena);
-				strcat(cadena, ",");
-				res = tok(cadena, &tam);
-				for (int i = tam - 1; i >= 0; i--)
+				insertar(arbol, raiz);
+				printf("\n");
+				for (int i = 0; i<tam; i++)
 				{
 					val = *(res + i);
 					insertar(arbol, val);
 				}
+				printf("\n Mostrando ARBOL... \n\n");
 				system("pause");
-				system("cls");
+				inicializar();
+				al_init();
+				al_init_font_addon();
+				al_init_ttf_addon();
+				al_install_keyboard();
+				ALLEGRO_FONT *font = al_load_ttf_font("ARIAL.ttf", 11, 0);
+				int i, **mat = (int**)malloc(500 * sizeof(int));
+				for (i = 0; i < 50; i++)
+				{
+					*(mat + i) = (int*)malloc(50 * sizeof(int));
+				}
+				for (i = 0; i < 50; i++)
+				{
+					for (int j = 0; j < 50; j++)
+					{
+						*(*(mat + i) + j) = 0;
+					}
+				}
+				i = 0;
+				colorearPantalla();
+				verArbol(arbol, 0, font, espacios, mat);
+				int auxiliar = 0;
+				for (int j = 0; j < i; j++)
+				{
+					*(*(mat + 1) + j) = 6 + auxiliar;
+					auxiliar += 30;
+				}
+				VY += 20;
+				VX = 130;
+				al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "PRE ORDEN:");//es como printf
+																													 //printf("\n\n Pre Orden  :  ");
+				preOrden(arbol, font);
+				VY += 20;
+				VX = 130;
+				al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "POST ORDEN:");//es como printf
+																													  //printf("\n\n Post Orden :  ");
+				postOrden(arbol, font);
+				printf("MATRIZ \n");
+				for (int j = 0; j < i - 1; j++)
+				{
+					printf("%d=%d\n", *(*(mat + 0) + j), *(*(mat + 1) + j + 1));
+					al_draw_line(*(*(mat + 0) + j), *(*(mat + 1) + j), *(*(mat + 0) + j + 1), *(*(mat + 1) + j + 1), al_map_rgb_f(0, 1, 0), 2);
+				}
+				al_flip_display(); // Dibujar en pantalla todo lo almacenado en el buffer, en este caso solamente está el círculo de arriba
+				printf("\n");
+				system("pause");
+				finalizar(/*display*/);
+				system("pause");
+			}
+			goto ini;
+			break;
+		}
+		case 2:
+		{
+			arbol = NULL;
+			VY = 6;
+			VX = 130;
+			system("cls");
+			printf(" Ingresar expresion y separe los numeros con \",\":  \n");
+			ingresar(cadena);
+			audio(cadena);
+			strcat(cadena, ",");
+			res = tok(cadena, &tam);
+			if (verif(res, tam) != 2)
+			{
+				if (verif(res, tam) == 0)
+				{
+					printf("\nCADENA MAL INGREADA...\n");
+				}
+				else
+				{
+					printf("\nLA CADENA NO ESTA INGRESADA EN preOrden...\n");
+					system("pause");
+					goto ini;
+				}
+			}
+			else
+			{
+				printf("\nPRE ORDEN\n");
+				printf("\n");
+				for (int i = 0; i<tam; i++)
+				{
+					val = *(res + i);
+					insertar(arbol, val);
+				}
 				printf("\n Mostrando ARBOL... \n\n");
 				system("pause");
 				inicializar();
@@ -1145,10 +1018,79 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 					*(mat + i) = (int*)malloc(2 * sizeof(int));
 				}
 				i = 0;
-				i=verArbol(arbol, 0, font, espacios,mat);
+				verArbol(arbol, 0, font, espacios, mat);
 				VY += 20;
 				VX = 130;
-				al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/,VY/*posicion en y*/, 0, "IN ORDEN:");//es como printf
+				al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "IN ORDEN:");//es como printf
+				printf("\n\n En orden   :  ");
+				enOrden(arbol, font);
+				VY += 20;
+				VX = 130;
+				al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "POST ORDEN:");//es como printf
+				printf("\n\n Post Orden :  ");
+				postOrden(arbol, font);
+				al_flip_display(); // Dibujar en pantalla todo lo almacenado en el buffer, en este caso solamente está el círculo de arriba
+				printf("\n");
+				system("pause");
+				finalizar(/*display*/);
+			}
+			goto ini;
+			break;
+		}
+		case 3:
+		{
+			arbol = NULL;
+			VY = 6;
+			VX = 130;
+			system("cls");
+			printf(" Ingresar expresion y separe los numeros con \",\":  \n");
+			ingresar(cadena);
+			audio(cadena);
+			strcat(cadena, ",");
+			res = tok(cadena, &tam);
+			if (verif(res, tam) != 3)
+			{
+				if (verif(res, tam) == 0)
+				{
+					printf("\nCADENA MAL INGREADA...\n");
+					system("pause");
+				}
+				else
+				{
+					printf("\nLA CADENA NO ESTA INGRESADA EN postOrden...\n");
+					system("pause");
+					goto ini;
+				}
+			}
+			else
+			{
+				printf("\nPOST ORDEN\n");
+				printf("\n");
+				for (int i = tam - 1; i >= 0; i--)
+				{
+					val = *(res + i);
+					insertar(arbol, val);
+				}
+				printf("\n Mostrando ARBOL... \n\n");
+				system("pause");
+				inicializar();
+				al_init();
+				al_init_font_addon();
+				al_init_ttf_addon();
+				al_install_keyboard();
+				ALLEGRO_FONT *font = al_load_ttf_font("ARIAL.ttf", 11, 0);
+				ALLEGRO_BITMAP *text_img = al_create_bitmap(al_get_text_width(font, "PRIMERO"), al_get_font_ascent(font));
+				colorearPantalla();
+				int i, **mat = (int**)malloc(500 * sizeof(int));
+				for (i = 0; i < 2; i++)
+				{
+					*(mat + i) = (int*)malloc(2 * sizeof(int));
+				}
+				i = 0;
+				verArbol(arbol, 0, font, espacios, mat);
+				VY += 20;
+				VX = 130;
+				al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "IN ORDEN:");//es como printf
 				printf("\n\n En orden   :  ");
 				enOrden(arbol, font);
 				VY += 20;
@@ -1156,54 +1098,191 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 				al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "PRE ORDEN:");//es como printf
 				printf("\n\n Pre Orden  :  ");
 				preOrden(arbol, font);
-				VY += 20;
-				VX = 130;
-				al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "POST ORDEN:");//es como printf
-				printf("\n\n Post Orden :  ");
-				postOrden(arbol, font);
 				al_flip_display(); // Dibujar en pantalla todo lo almacenado en el buffer, en este caso solamente está el círculo de arriba
+				printf("\n");
 				system("pause");
 				finalizar(/*display*/);
-				goto ini;
-				break;
 			}
+			goto ini;
+			break;
+		}
+		case 4:
+		{
+			arbol = NULL;
+			VY = 6;
+			VX = 130;
+			system("cls");
+			printf(" Ingresar expresion y separe los numeros con \",\":  \n");
+			ingresar(cadena);
+			audio(cadena);
+			strcat(cadena, ",");
+			res = tok(cadena, &tam);
+			for (int i = tam - 1; i >= 0; i--)
+			{
+				val = *(res + i);
+				insertar(arbol, val);
+			}
+			system("pause");
+			system("cls");
+			printf("\n Mostrando ARBOL... \n\n");
+			system("pause");
+			inicializar();
+			al_init();
+			al_init_font_addon();
+			al_init_ttf_addon();
+			al_install_keyboard();
+			ALLEGRO_FONT *font = al_load_ttf_font("ARIAL.ttf", 11, 0);
+			ALLEGRO_BITMAP *text_img = al_create_bitmap(al_get_text_width(font, "PRIMERO"), al_get_font_ascent(font));
+			colorearPantalla();
+			int i, **mat = (int**)malloc(500 * sizeof(int));
+			for (i = 0; i < 2; i++)
+			{
+				*(mat + i) = (int*)malloc(2 * sizeof(int));
+			}
+			i = 0;
+			i = verArbol(arbol, 0, font, espacios, mat);
+			VY += 20;
+			VX = 130;
+			al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "IN ORDEN:");//es como printf
+			printf("\n\n En orden   :  ");
+			enOrden(arbol, font);
+			VY += 20;
+			VX = 130;
+			al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "PRE ORDEN:");//es como printf
+			printf("\n\n Pre Orden  :  ");
+			preOrden(arbol, font);
+			VY += 20;
+			VX = 130;
+			al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "POST ORDEN:");//es como printf
+			printf("\n\n Post Orden :  ");
+			postOrden(arbol, font);
+			al_flip_display(); // Dibujar en pantalla todo lo almacenado en el buffer, en este caso solamente está el círculo de arriba
+			system("pause");
+			finalizar(/*display*/);
+			goto ini;
+			break;
+		}
 		}
 		system("pause");
 		main();
+		//------------------------------------------------
 	}
 	if (y == 5 && mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
 	{
+		/***************************************		
+		Arbol B
+		****************************************/
 		system("cls");
 		printf("arbol b");
+		//--------------------------------------
+
+		//----------------------------------------
 		/*float res;
 		ingresopolapre(&res);
 		audio(res*/
 		system("pause");
+		system("cls");
 		main();
 	}
 	if (y == 7 && mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
 	{
+		/************************************************************		
+		ARbol b+
+		************************************************************/
 		system("cls");
 		printf("arbol b+");
-		
+		bmas ar;
+		char *cad = (char*)malloc(500 * sizeof(char));
+		limpiar(cad, 500);
+		int *res = (int*)malloc(50 * sizeof(int));
+		int tam, pointer, val1;
+		ar.reiniciarBmas();
+		printf("\nIngrese el valor de m: ");
+		scanf_s("%d", &pointer);
+		val1 = pointer - 1;
+		ar.valores(pointer, val1);
+		printf(" Ingresar expresion y separe los numeros con \",\":  \n");
+		ingresar(cad);
+		strcat(cad, ",");
+		res = tok(cad, &tam);
+		int val;
+		printf("nPointer = %d\n", pointer);
+		for (int i = 0; i < tam; i++) {
+			val = *(res + i);
+			ar.insert2(val, NULL);
+
+		}
+		printf("\n Mostrando ARBOL... \n\n");
+		system("pause");
+		inicializar();
+		al_init();
+		al_init_font_addon();
+		al_init_ttf_addon();
+		al_install_keyboard();
+		ALLEGRO_FONT *font = al_load_ttf_font("ARIAL.ttf", 11, 0);
+		colorearPantalla();
+		ar.imp(font);			//	siiiiiiiiiiiiiiiiiiiiiii
 		system("pause");
 		system("cls");
+		finalizar(/*display*/);
 		main();
 	}
 	if (y == 9 && mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
 	{
+		/***********************************AVL*****************************/
 		system("cls");
 		printf("arbol avl");
+
+		avl_node *root = NULL;
+		int choice, item;
+		avl avl;
+		char *cadenaAvl = (char*)malloc(500 * sizeof(char));
+		int *resAvl = (int*)malloc(50 * sizeof(char));
+		int tam, val;
+		printf(" Ingresar expresion y separe los numeros con \",\":  \n");
+		limpiar(cadenaAvl, 500);
+		ingresar(cadenaAvl);
+		strcat(cadenaAvl, ",");
+		resAvl = tok(cadenaAvl, &tam);
+		for (int i = 0; i<tam; i++)
+		{
+			val = *(resAvl + i);
+			root = avl.insert(root, val);
+		}
+		/*if (root == NULL)
+		{
+		printf("Tree is Empty");
+		}*/
+		printf("Balanced AVL Tree:");
+		printf("\n Mostrando ARBOL... \n\n");
 		system("pause");
+		inicializar();
+		al_init();
+		al_init_font_addon();
+		al_init_ttf_addon();
+		al_install_keyboard();
+		ALLEGRO_FONT *font = al_load_ttf_font("ARIAL.ttf", 11, 0);
+		colorearPantalla();
+		avl.reiniciar();
+		avl.display(root, 1,font);
+		al_flip_display(); // Dibujar en pantalla todo lo almacenado en el buffer, en este caso solamente está el círculo de arriba
+		system("pause");
+		finalizar(/*display*/);
+		printf("\n\nIn-Orden:");
+		avl.inorder(root);
+		printf("\n\npre-Orden:");
+		avl.preorder(root);
+		printf("\n\npost-Orden:");
+		avl.postorder(root);
+		printf("\n");
+		system("pause");
+		system("cls");
 		main();
 	}
 	if (y == 11 && mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
 	{
 		system("cls");
 		printf("pdf");
-		//pdf1();
-		//pdf2();
-		
 		system("pause");
 		main();
 	}
