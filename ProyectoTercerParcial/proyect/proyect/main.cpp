@@ -17,12 +17,13 @@ Autores:	Michael Morales
 			Diego Paz
 Fecha de Creacion: 28-01-2018	Fecha de Modificacion: 18-02-2018
 Profesor: Ing. Edgar Fernando Solis Acosta
-Carrera: Ingenieria en Sitemas e Informatica
+Carrera: Ingenieria en Sistemas e Informatica
 */
 
 #define _CRT_SECURE_NO_WARNINGS
 #include<Windows.h>
 #include <MMsystem.h>
+#include"binario.h"
 #include <ctype.h>
 #include <fstream>
 #include <sstream>
@@ -111,73 +112,7 @@ void membrete() {
 	printf("Integrantes: Michael Morales\tDiego Paz\n");
 	printf("Fecha de creacion: 2018-01-28\t\tFecha de modificacion: 2018-01-30\n");
 	printf("Profesor:Fernando Solis\n");
-	printf("Carrera: Ingenieria en Istemas e Informatica\n\n");
-}
-
-
-//-----------------------
-struct nodoBinario
-{
-	int nro;
-	struct nodoBinario *izq, *der;
-};
-typedef struct nodoBinario *ABB;
-ABB crearNodo(int x)
-{
-	ABB nuevoNodo = new(struct nodoBinario);
-	nuevoNodo->nro = x;
-	nuevoNodo->izq = NULL;
-	nuevoNodo->der = NULL;
-
-	return nuevoNodo;
-}
-void insertar(ABB &arbol, int x)
-{
-	if (arbol == NULL)
-	{
-		arbol = crearNodo(x);
-	}
-	else if (x < arbol->nro)
-		insertar(arbol->izq, x);
-	else if (x > arbol->nro)
-		insertar(arbol->der, x);
-}
-
-//-------------------------
-void preOrden(ABB arbol, ALLEGRO_FONT *font)
-{
-	if (arbol != NULL)
-	{
-		VX += 5;
-		al_draw_textf(font, al_map_rgb_f(0, 0, 0), VX, VY, 0, "%d ", arbol->nro);
-		VX += 10;
-		preOrden(arbol->izq, font);
-		preOrden(arbol->der, font);
-	}
-}
-
-void enOrden(ABB arbol, ALLEGRO_FONT *font)
-{
-	if (arbol != NULL)
-	{
-		enOrden(arbol->izq, font);
-		VX += 5;
-		al_draw_textf(font, al_map_rgb_f(0, 0, 0), VX, VY, 0, "%d ", arbol->nro);
-		VX += 10;
-		enOrden(arbol->der, font);
-	}
-}
-
-void postOrden(ABB arbol, ALLEGRO_FONT *font)
-{
-	if (arbol != NULL)
-	{
-		postOrden(arbol->izq, font);
-		postOrden(arbol->der, font);
-		VX += 5;
-		al_draw_textf(font, al_map_rgb_f(0, 0, 0), VX, VY, 0, "%d ", arbol->nro);
-		VX += 10;
-	}
+	printf("Carrera: Ingenieria en Sistemas e Informatica\n\n");
 }
 
 void limpiar(char *cad, int tam) {
@@ -186,51 +121,7 @@ void limpiar(char *cad, int tam) {
 	}
 }
 
-void FOR(char *espacios, int n, int i)
-{
-	if (i == n)
-	{
-		return;
-	}
-	else
-	{
-		strcat(espacios, "   ");
-		FOR(espacios, n, ++i);
-	}
-}
-int cont = 0;
-int verArbol(ABB arbol, int n, ALLEGRO_FONT *font, char* espacios, int **mat)
-{
-	//int aux = *i;
-	if (arbol == NULL) {
-		al_flip_display(); // Dibujar en pantalla todo lo almacenado en el buffer, en este caso solamente está el círculo de arriba
-		return cont;
-	}
-	else {
-		*(*(mat + 0) + cont) = n * 9;
-		printf("%d=%d->%d=%d//%d\t%d\n", *(*(mat + 0) + cont), n * 9, *(*(mat + 1) + cont), VY, cont, arbol->nro);
-		cont++;
-		// j+=15;
-		//*i+=1;
-		verArbol(arbol->der, n + 1, font, espacios, mat);
-		limpiar(espacios, 100);
-		FOR(espacios, n, 0);
 
-		al_draw_circle((n * 9) + 10, VY + 6, 10, al_map_rgb_f(1, 0, 0), 2);
-		al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "%s  %d", espacios, arbol->nro);//es como printf
-
-
-
-																															   //coordenadas de Y no esta bien xD
-		*(*(mat + 1) + cont - 1) = VY;
-
-
-
-		VY += 30;
-
-		verArbol(arbol->izq, n + 1, font, espacios, mat);
-	}
-}
 int verif(int *cad,int tam){
 	int verificar=0,cont=0;
 	for(int i=0;i<tam;i++){
@@ -257,12 +148,6 @@ int verif(int *cad,int tam){
 
 	return verificar;
 }
-//---------------------------------------------para B----------
-
-
-//--------------------------------------Hasta aqui para B--------------------------
-
-
 void color(int X){
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), X);
 }
@@ -413,6 +298,7 @@ void ingresar(char *cad)
 	int c, i = 0;
 	while ((c = _getch()) != 13)
 	{
+		//if ((c >= 48 && c <= 57) || (c == 44) || (c== 45))
 		if ((c >= 48 && c <= 57) || (c == 44))
 		{
 			*(cad + i) = c;
@@ -444,7 +330,21 @@ int *tok(char *cad, int *tam)
 	*tam = i;
 	return res;
 }
-
+void ingresarN(char *cad)
+{
+	int c, i = 0;
+	while ((c = _getch()) != 13)
+	{
+		if ((c >= 48 && c <= 57))
+		{
+			*(cad + i) = c;
+			printf("%c", c);
+			i++;
+		}
+		*(cad + i) = '\0';
+	}
+	return;
+}
 void prueba(ALLEGRO_FONT *font) {
 	colorearPantalla();
 	int fps = 50;
@@ -463,62 +363,67 @@ void audio(char *cad)
 		{
 		case '1':
 		{
-			//PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\1.wav"), NULL, SND_SYNC);
+			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\Proyecto terccer parcial\\proyect\\proyect\\Audio Inicio\\1.wav"), NULL, SND_SYNC);
 			break;
 		}
 		case '2':
 		{
-			//PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\2.wav"), NULL, SND_SYNC);
+			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\Proyecto terccer parcial\\proyect\\proyect\\Audio Inicio\\2.wav"), NULL, SND_SYNC);
 			break;
 		}
 		case '3':
 		{
-			//PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\3.wav"), NULL, SND_SYNC);
+			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\Proyecto terccer parcial\\proyect\\proyect\\Audio Inicio\\3.wav"), NULL, SND_SYNC);
 			break;
 		}
 		case '4':
 		{
-			//PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\4.wav"), NULL, SND_SYNC);
+			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\Proyecto terccer parcial\\proyect\\proyect\\Audio Inicio\\4.wav"), NULL, SND_SYNC);
 			break;
 		}
 		case '5':
 		{
-			//PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\5.wav"), NULL, SND_SYNC);
+			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\Proyecto terccer parcial\\proyect\\proyect\\Audio Inicio\\5.wav"), NULL, SND_SYNC);
 			break;
 		}
 		case '6':
 		{
-			//PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\6.wav"), NULL, SND_SYNC);
+			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\Proyecto terccer parcial\\proyect\\proyect\\Audio Inicio\\6.wav"), NULL, SND_SYNC);
 			break;
 		}
 		case '7':
 		{
-			//PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\7.wav"), NULL, SND_SYNC);
+			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\Proyecto terccer parcial\\proyect\\proyect\\Audio Inicio\\7.wav"), NULL, SND_SYNC);
 			break;
 		}
 		case '8':
 		{
-			//PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\8.wav"), NULL, SND_SYNC);
+			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\Proyecto terccer parcial\\proyect\\proyect\\Audio Inicio\\8.wav"), NULL, SND_SYNC);
 			break;
 		}
 		case '9':
 		{
-			//PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\9.wav"), NULL, SND_SYNC);
+			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\Proyecto terccer parcial\\proyect\\proyect\\Audio Inicio\\9.wav"), NULL, SND_SYNC);
 			break;
 		}
 		case '0':
 		{
-			//PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\0.wav"), NULL, SND_SYNC);
+			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\Proyecto terccer parcial\\proyect\\proyect\\Audio Inicio\\0.wav"), NULL, SND_SYNC);
 			break;
 		}
 		case ',':
 		{
-			//PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\allegro_visual\\proyect\\proyect\\Audio Inicio\\,.wav"), NULL, SND_SYNC);
+			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\Proyecto terccer parcial\\proyect\\proyect\\Audio Inicio\\,.wav"), NULL, SND_SYNC);
+			break;
+		}
+		case '-':
+		{
+			PlaySound(TEXT("D:\\TERCER LV\\Estructura de Datos\\TercerPArcial\\Proyecto terccer parcial\\proyect\\proyect\\Audio Inicio\\-.wav"), NULL, SND_SYNC);
 			break;
 		}
 		default:
 		{
-			//PlaySound(NULL, NULL, 0);
+			PlaySound(NULL, NULL, 0);
 			break;
 		}
 		}
@@ -532,6 +437,7 @@ void buck() {
 	char *fecha = (char*)malloc(40 * sizeof(char));
 	char *fechaAux = (char*)malloc(40 * sizeof(char));
 	time_t current_time;
+	limpiar(lectura, 50);
 	limpiar(fecha, 40);
 	limpiar(fechaAux, 40);
 	current_time = time(NULL);
@@ -570,6 +476,7 @@ void buck() {
 	//---------
 	for (int i = 0; !feof(His); i++) {
 		fflush(stdin);
+		limpiar(lectura, 50);
 		fscanf(His, "%[^\n]", &lectura);
 		printf("%s\n", lectura);
 		fprintf_s(buc, "%s\n", lectura);
@@ -634,10 +541,10 @@ void pdf1()
 	if (imp == 1)
 	{
 		ofstream LeerDatos;
-		LeerDatos.open("Posfija.txt", ios::out | ios::app);
-		tifstream in(TEXT("Posfija.txt"));
+		LeerDatos.open("HISTORIAL.txt", ios::out | ios::app);
+		tifstream in(TEXT("HISTORIAL.txt"));
 		PrintFile(in);
-		ShellExecute(NULL, TEXT("open"), TEXT("D:\\TERCER LV\\Estructura de Datos\\Proyecto - 1 - Parcial\\ProyectoSegundoParcial\\clases anidadas\\Posfija.pdf"), NULL, NULL, SW_SHOWNORMAL);
+		ShellExecute(NULL, TEXT("open"), TEXT("D:\\TERCER LV\\Estructura de Datos\\Proyecto - 1 - Parcial\\ProyectoTercerParcial\\proyect\\proyect\\Ecuaciones.pdf"), NULL, NULL, SW_SHOWNORMAL);
 	}
 	system("pause");
 	_getch;
@@ -851,19 +758,24 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 	} while (!Captured);
 
 	if (y == 3 && mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
-	{/*
+	{
+	/*
 	 BINARIO
 	 */
+		FILE *His;
+		His = fopen("HISTORIAL.txt", "a");
+		fprintf(His,"\nArbol binario \n");
 		printf("\nArbol binario \n");
 		//----------------------------------------------------------------------
 		int raiz;
 		char *espacios = (char*)malloc(100 * sizeof(char));
 		limpiar(espacios, 100);
 		ABB arbol = NULL;   // creado Arbol
+		binario arB;
 		int tam1;
 		char *cadena = (char*)malloc(500 * sizeof(char));  // numero de nodos del arbol
 		int val, n, tam, opc; // elemento a insertar en cada nodo
-
+		char *QR = (char*)malloc(75 * sizeof(char));
 		printf("\n\t\t  ..[ ARBOL BINARIO DE BUSQUEDA ]..  \n\n");
 		int *res = (int*)malloc(50 * sizeof(int));
 
@@ -878,9 +790,12 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 			VX = 130;
 			arbol = NULL;
 			VY = 6;
+			arB.valores(VX, VY);
 			system("cls");
 			printf(" Ingresar expresion y separe los numeros con \",\":  \n");
 			ingresar(cadena);
+			strcpy(QR, "Expresion Binaria: ");
+			strcat(QR, cadena);
 			audio(cadena);
 			strcat(cadena, ",");
 			res = tok(cadena, &tam);
@@ -899,6 +814,7 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 			}
 			else
 			{
+				fprintf(His, "\nCadena ingresada en inOden");
 				printf("\nIN ORDEN\n");
 				if (tam % 2 == 0)
 				{
@@ -908,13 +824,14 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 				{
 					raiz = *(res + ((tam / 2)));
 				}
-				insertar(arbol, raiz);
+				arB.insertar(arbol, raiz);
 				printf("\n");
 				for (int i = 0; i<tam; i++)
 				{
 					val = *(res + i);
-					insertar(arbol, val);
+					arB.insertar(arbol, val);
 				}
+				fprintf(His,"\n Mostrando ARBOL... \n\n");
 				printf("\n Mostrando ARBOL... \n\n");
 				system("pause");
 				inicializar();
@@ -937,7 +854,7 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 				}
 				i = 0;
 				colorearPantalla();
-				verArbol(arbol, 0, font, espacios, mat);
+				arB.verArbol(arbol, 0, font, espacios, mat,His,QR);
 				int auxiliar = 0;
 				for (int j = 0; j < i; j++)
 				{
@@ -946,18 +863,23 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 				}
 				VY += 20;
 				VX = 130;
+				VY = arB.getY();
+				arB.valores(VX, VY);
 				al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "PRE ORDEN:");//es como printf
-																													 //printf("\n\n Pre Orden  :  ");
-				preOrden(arbol, font);
-				VY += 20;
+				fprintf(His,"\n\n Pre Orden  :  ");
+				arB.preOrden(arbol, font,His);
+				
 				VX = 130;
+				VY = arB.getY();
+				VY += 20;
+				arB.valores(VX, VY);
 				al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "POST ORDEN:");//es como printf
 																													  //printf("\n\n Post Orden :  ");
-				postOrden(arbol, font);
+				arB.postOrden(arbol, font,His);
 				printf("MATRIZ \n");
 				for (int j = 0; j < i - 1; j++)
 				{
-					printf("%d=%d\n", *(*(mat + 0) + j), *(*(mat + 1) + j + 1));
+					//printf("%d=%d\n", *(*(mat + 0) + j), *(*(mat + 1) + j + 1));
 					al_draw_line(*(*(mat + 0) + j), *(*(mat + 1) + j), *(*(mat + 0) + j + 1), *(*(mat + 1) + j + 1), al_map_rgb_f(0, 1, 0), 2);
 				}
 				al_flip_display(); // Dibujar en pantalla todo lo almacenado en el buffer, en este caso solamente está el círculo de arriba
@@ -966,6 +888,7 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 				finalizar(/*display*/);
 				system("pause");
 			}
+			generarQr(QR); system("pause");
 			goto ini;
 			break;
 		}
@@ -974,9 +897,12 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 			arbol = NULL;
 			VY = 6;
 			VX = 130;
+			arB.valores(VX, VY);
 			system("cls");
 			printf(" Ingresar expresion y separe los numeros con \",\":  \n");
 			ingresar(cadena);
+			strcpy(QR, "Expresion Binaria: ");
+			strcat(QR, cadena);
 			audio(cadena);
 			strcat(cadena, ",");
 			res = tok(cadena, &tam);
@@ -996,11 +922,12 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 			else
 			{
 				printf("\nPRE ORDEN\n");
+				fprintf(His,"\nIngresada en PRE ORDEN\n");
 				printf("\n");
 				for (int i = 0; i<tam; i++)
 				{
 					val = *(res + i);
-					insertar(arbol, val);
+					arB.insertar(arbol, val);
 				}
 				printf("\n Mostrando ARBOL... \n\n");
 				system("pause");
@@ -1018,22 +945,31 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 					*(mat + i) = (int*)malloc(2 * sizeof(int));
 				}
 				i = 0;
-				verArbol(arbol, 0, font, espacios, mat);
+				arB.verArbol(arbol, 0, font, espacios, mat, His,QR);
 				VY += 20;
 				VX = 130;
+				VY = arB.getY();
+				
+				arB.valores(VX, VY);
 				al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "IN ORDEN:");//es como printf
 				printf("\n\n En orden   :  ");
-				enOrden(arbol, font);
+				fprintf(His,"\n\n En orden   :  ");
+				arB.enOrden(arbol, font, His);
 				VY += 20;
 				VX = 130;
+				VY =arB.getY();
+				VY += 20;
+				arB.valores(VX, VY);
 				al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "POST ORDEN:");//es como printf
 				printf("\n\n Post Orden :  ");
-				postOrden(arbol, font);
+				fprintf(His,"\n\n Post Orden :  ");
+				arB.postOrden(arbol, font, His);
 				al_flip_display(); // Dibujar en pantalla todo lo almacenado en el buffer, en este caso solamente está el círculo de arriba
 				printf("\n");
 				system("pause");
 				finalizar(/*display*/);
 			}
+			generarQr(QR); system("pause");
 			goto ini;
 			break;
 		}
@@ -1042,9 +978,12 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 			arbol = NULL;
 			VY = 6;
 			VX = 130;
+			arB.valores(VX, VY);
 			system("cls");
 			printf(" Ingresar expresion y separe los numeros con \",\":  \n");
 			ingresar(cadena);
+			strcpy(QR, "Expresion Binaria: ");
+			strcat(QR, cadena);
 			audio(cadena);
 			strcat(cadena, ",");
 			res = tok(cadena, &tam);
@@ -1065,11 +1004,12 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 			else
 			{
 				printf("\nPOST ORDEN\n");
+				fprintf(His,"\nIngresada en POST ORDEN\n");
 				printf("\n");
 				for (int i = tam - 1; i >= 0; i--)
 				{
 					val = *(res + i);
-					insertar(arbol, val);
+					arB.insertar(arbol, val);
 				}
 				printf("\n Mostrando ARBOL... \n\n");
 				system("pause");
@@ -1087,22 +1027,31 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 					*(mat + i) = (int*)malloc(2 * sizeof(int));
 				}
 				i = 0;
-				verArbol(arbol, 0, font, espacios, mat);
+				arB.verArbol(arbol, 0, font, espacios, mat, His,QR);
 				VY += 20;
 				VX = 130;
+				VY = arB.getY();
+				
+				arB.valores(VX, VY);
 				al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "IN ORDEN:");//es como printf
 				printf("\n\n En orden   :  ");
-				enOrden(arbol, font);
+				fprintf(His,"\n\n En orden   :  ");
+				arB.enOrden(arbol, font, His);
 				VY += 20;
 				VX = 130;
+				VY = arB.getY();
+				VY += 20;
+				arB.valores(VX, VY);
 				al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "PRE ORDEN:");//es como printf
 				printf("\n\n Pre Orden  :  ");
-				preOrden(arbol, font);
+				fprintf(His,"\n\n Pre Orden  :  ");
+				arB.preOrden(arbol, font, His);
 				al_flip_display(); // Dibujar en pantalla todo lo almacenado en el buffer, en este caso solamente está el círculo de arriba
 				printf("\n");
 				system("pause");
 				finalizar(/*display*/);
 			}
+			generarQr(QR); system("pause");
 			goto ini;
 			break;
 		}
@@ -1111,16 +1060,19 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 			arbol = NULL;
 			VY = 6;
 			VX = 130;
+			arB.valores(VX, VY);
 			system("cls");
 			printf(" Ingresar expresion y separe los numeros con \",\":  \n");
 			ingresar(cadena);
+			strcpy(QR, "Expresion Binaria: ");
+			strcat(QR, cadena);
 			audio(cadena);
 			strcat(cadena, ",");
 			res = tok(cadena, &tam);
 			for (int i = tam - 1; i >= 0; i--)
 			{
 				val = *(res + i);
-				insertar(arbol, val);
+				arB.insertar(arbol, val);
 			}
 			system("pause");
 			system("cls");
@@ -1140,29 +1092,47 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 				*(mat + i) = (int*)malloc(2 * sizeof(int));
 			}
 			i = 0;
-			i = verArbol(arbol, 0, font, espacios, mat);
+			arB.verArbol(arbol, 0, font, espacios, mat, His,QR);
 			VY += 20;
 			VX = 130;
+			VY = arB.getY();
+			arB.valores(VX, VY);
 			al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "IN ORDEN:");//es como printf
 			printf("\n\n En orden   :  ");
-			enOrden(arbol, font);
+			fprintf(His,"\n\n En orden   :  ");
+			arB.enOrden(arbol, font, His);
 			VY += 20;
 			VX = 130;
+			VY = arB.getY();
+			VY += 20;
+			arB.valores(VX, VY);
 			al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "PRE ORDEN:");//es como printf
 			printf("\n\n Pre Orden  :  ");
-			preOrden(arbol, font);
+			fprintf(His,"\n\n Pre Orden  :  ");
+			arB.preOrden(arbol, font, His);
 			VY += 20;
 			VX = 130;
+			VY = arB.getY();
+			VY += 20;
+			arB.valores(VX, VY);
 			al_draw_textf(font, al_map_rgb_f(0, 0, 0), 0/*posicion en x*/, VY/*posicion en y*/, 0, "POST ORDEN:");//es como printf
 			printf("\n\n Post Orden :  ");
-			postOrden(arbol, font);
+			fprintf(His,"\n\n Post Orden :  ");
+			//VY += 20;
+			VX = 130;
+			VY = arB.getY();
+			VY += 20;
+			arB.valores(VX, VY);
+			arB.postOrden(arbol, font, His);
 			al_flip_display(); // Dibujar en pantalla todo lo almacenado en el buffer, en este caso solamente está el círculo de arriba
 			system("pause");
 			finalizar(/*display*/);
+			generarQr(QR); system("pause");
 			goto ini;
 			break;
 		}
 		}
+		fclose(His);
 		system("pause");
 		main();
 		//------------------------------------------------
@@ -1173,13 +1143,131 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 		Arbol B
 		****************************************/
 		system("cls");
-		printf("arbol b");
+		printf("\nArbol B\n");
+		FILE *His;
+		His = fopen("HISTORIAL.txt", "a");
+		fprintf(His,"\narbol b");
 		//--------------------------------------
+		char *m = (char*)malloc(5 * sizeof(char));
+		char *cad = (char*)malloc(500 * sizeof(char));
+		char *tora = (char*)malloc(500 * sizeof(char));
+		char *QR = (char*)malloc(75 * sizeof(char));
+		int orden, tam = 0, verificar = 0;
+		char *aux = (char*)malloc(5 * sizeof(char));
+		char **graf = (char**)malloc(50 * sizeof(char));
+		for (int i = 0; i<50; i++)
+		{
+			fflush(stdin);
+			*(graf + i) = (char*)malloc(10 * sizeof(char));
+		}
+		//for(int i=0;i<50)
 
+		do {
+			fflush(stdin);
+			system("cls");
+			printf("Ingrese el orden m= ");
+			ingresarN(m);
+			orden = atoi(m);
+		} while ((orden <= 2) || (orden >= 101));
+	iniB:
+		printf("\n");
+		printf(" Ingresar expresion y separe los numeros con \",\":  \n");
+		limpiar(cad, 500);
+		limpiar(tora, 500);
+		ingresar(cad);
+		strcpy(aux, "");
+		//_itoa(m, aux, 10);
+		strcpy(QR, "Expresion de Arbol B: ");
+		strcat(QR, cad);
+		strcat(QR, "\nEl valor de m: ");
+		strcat(QR, m);
+		strcpy(tora, cad);
+		int *res = (int*)malloc(50 * sizeof(int));
+		res = tok(cad, &tam);
+
+		btree arbol(orden - 1);
+		stclave clave;
+		int i;
+
+		for (int i = 0; i<tam; i++) {
+			for (int j = i + 1; j<tam; j++) {
+				if (*(res + i) == *(res + j)) {
+					goto iniB;
+				}
+			}
+		}
+
+
+		system("pause");
+		int *matriz = (int*)malloc(tam * sizeof(int));
+
+		for (i = 0; i < tam; i++) {
+			do {
+				*(matriz + i) = *(res + i);
+				clave.valor = *(matriz + i);
+				clave.registro = i;
+				printf("%d->", *(matriz + i));
+			} while (!arbol.Insertar(clave));
+		}
+
+		printf("mostrar: \n");
+		int cont = arbol.Mostrar(graf);
+
+		for (i = 0; i < tam; i++) {
+			printf("Borrar: [%d]: %d\n", i, *(matriz + i));
+			arbol.Borrar(*(matriz + i));
+		}
+		/*string *graf1=(string*)malloc(50*sizeof(string));
+		arbol.Mostrar(graf1);*/
+		printf("\t\t%d\n", cont);
+		int auxiliar = 0;
+		for (i = 0; i<20; i++)
+		{
+			if (strcmp(*(graf + i), "") == 0)
+			{
+				strcpy(*(graf + i), "\n");
+			}
+			else
+			{
+				auxiliar++;
+			}
+		}
+		strcat(QR, "\n");
+		for (i = 0; i<tam + 2.; i++)
+		{
+			//printf("%s\t",*(graf+i));
+			printf("%s", *(graf + i));
+			strcat(QR, *(graf + i));
+		}
+		for (i = 0; i<20; i++)
+		{
+			if (strcmp(*(graf + i), "\n") == 0)
+			{
+				strcpy(*(graf + i), "");
+			}
+		}
 		//----------------------------------------
-		/*float res;
-		ingresopolapre(&res);
-		audio(res*/
+		inicializar();
+		al_init();
+		al_init_font_addon();
+		al_init_ttf_addon();
+		al_install_keyboard();
+		ALLEGRO_FONT *font = al_load_ttf_font("ARIAL.ttf", 12, 0);
+		ALLEGRO_BITMAP *text_img = al_create_bitmap(al_get_text_width(font, "PRIMERO"), al_get_font_ascent(font));
+		colorearPantalla();
+		al_draw_text(font, al_map_rgb_f(0, 0, 10), 0, 0, 0, "Autor: Morales Michael");
+		al_draw_text(font, al_map_rgb_f(0, 0, 10), 0, 15, 0, "            Paz Diego");
+		al_draw_textf(font, al_map_rgb_f(5, 0, 10), 0, 30, 0, "GRAFICO ARBOL B: %s", tora);
+		fprintf(His, "\n\nCADENA INGRESADA: %s", tora);
+		al_draw_textf(font, al_map_rgb_f(5, 0, 10), 0, 45, 0, "M= %s", m);
+		fprintf(His, "\nM= %s", m);
+		arbol.val(0, 50);
+		arbol.verArbolB(graf, font, tam, His);
+		al_flip_display();
+		system("pause");
+		finalizar();
+		fclose(His);
+		generarQr(QR);
 		system("pause");
 		system("cls");
 		main();
@@ -1190,29 +1278,44 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 		ARbol b+
 		************************************************************/
 		system("cls");
-		printf("arbol b+");
+		printf("\nArbol B+\n");
+		FILE *His;
+		His = fopen("HISTORIAL.txt", "a");
+		fprintf(His,"\n\narbol b+");
 		bmas ar;
 		char *cad = (char*)malloc(500 * sizeof(char));
+		char *QR = (char*)malloc(75 * sizeof(char));
 		limpiar(cad, 500);
 		int *res = (int*)malloc(50 * sizeof(int));
 		int tam, pointer, val1;
 		ar.reiniciarBmas();
 		printf("\nIngrese el valor de m: ");
 		scanf_s("%d", &pointer);
+		
+		char *aux = (char*)malloc(5 * sizeof(char));
+		_itoa(pointer, aux, 10);
+		
 		val1 = pointer - 1;
 		ar.valores(pointer, val1);
 		printf(" Ingresar expresion y separe los numeros con \",\":  \n");
 		ingresar(cad);
+		strcpy(QR,"Expresion de arbol B+: ");
+		strcat(QR, cad);
+		strcat(QR, "\nEl valor de m: ");
+		strcat(QR, aux);
+		strcat(QR, "\n");
+
 		strcat(cad, ",");
 		res = tok(cad, &tam);
 		int val;
 		printf("nPointer = %d\n", pointer);
 		for (int i = 0; i < tam; i++) {
 			val = *(res + i);
-			ar.insert2(val, NULL);
+			ar.insertarBms(val, NULL);
 
 		}
 		printf("\n Mostrando ARBOL... \n\n");
+		fprintf(His,"\n Mostrando ARBOL... \n\n");
 		system("pause");
 		inicializar();
 		al_init();
@@ -1221,40 +1324,54 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 		al_install_keyboard();
 		ALLEGRO_FONT *font = al_load_ttf_font("ARIAL.ttf", 11, 0);
 		colorearPantalla();
-		ar.imp(font);			//	siiiiiiiiiiiiiiiiiiiiiii
+		ar.imp(font,His,QR);			//	siiiiiiiiiiiiiiiiiiiiiii
+		fclose(His);
 		system("pause");
 		system("cls");
 		finalizar(/*display*/);
+		generarQr(QR);
+		system("pause");
 		main();
 	}
 	if (y == 9 && mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
 	{
 		/***********************************AVL*****************************/
 		system("cls");
-		printf("arbol avl");
-
-		avl_node *root = NULL;
-		int choice, item;
+		printf("\nArbol AVL\n");
+		FILE *His;
+		His = fopen("HISTORIAL.txt", "a");
+		fprintf(His,"\n\narbol avl");
+		avl_node *arbolAvl = NULL;
 		avl avl;
 		char *cadenaAvl = (char*)malloc(500 * sizeof(char));
+		char *QR = (char*)malloc(75 * sizeof(char));
 		int *resAvl = (int*)malloc(50 * sizeof(char));
 		int tam, val;
+	iniAvl:
+		system("cls");
 		printf(" Ingresar expresion y separe los numeros con \",\":  \n");
 		limpiar(cadenaAvl, 500);
 		ingresar(cadenaAvl);
+		strcpy(QR, "Expresion AVL:");
+		strcat(QR,cadenaAvl);
 		strcat(cadenaAvl, ",");
 		resAvl = tok(cadenaAvl, &tam);
+		for (int i = 0; i<tam; i++) {
+			for (int j = i + 1; j<tam; j++) {
+				if (*(resAvl + i) == *(resAvl + j)) {
+					printf("\nCadena mal ingresada\n");
+					system("pause");
+					goto iniAvl;
+				}
+			}
+		}
 		for (int i = 0; i<tam; i++)
 		{
 			val = *(resAvl + i);
-			root = avl.insert(root, val);
+			arbolAvl = avl.insertar(arbolAvl, val);
 		}
-		/*if (root == NULL)
-		{
-		printf("Tree is Empty");
-		}*/
-		printf("Balanced AVL Tree:");
 		printf("\n Mostrando ARBOL... \n\n");
+		fprintf(His,"\n Mostrando ARBOL... \n\n");
 		system("pause");
 		inicializar();
 		al_init();
@@ -1264,17 +1381,22 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 		ALLEGRO_FONT *font = al_load_ttf_font("ARIAL.ttf", 11, 0);
 		colorearPantalla();
 		avl.reiniciar();
-		avl.display(root, 1,font);
+		avl.dibujarArbol(arbolAvl, 1,font,His,QR);
 		al_flip_display(); // Dibujar en pantalla todo lo almacenado en el buffer, en este caso solamente está el círculo de arriba
 		system("pause");
 		finalizar(/*display*/);
 		printf("\n\nIn-Orden:");
-		avl.inorder(root);
+		fprintf(His,"\n\nIn-Orden:");
+		avl.inorder(arbolAvl,His);
 		printf("\n\npre-Orden:");
-		avl.preorder(root);
+		fprintf(His,"\n\npre-Orden:");
+		avl.preorder(arbolAvl,His);
 		printf("\n\npost-Orden:");
-		avl.postorder(root);
+		fprintf(His,"\n\npost-Orden:");
+		avl.postorder(arbolAvl,His);
 		printf("\n");
+		fclose(His);
+		generarQr(QR);
 		system("pause");
 		system("cls");
 		main();
@@ -1283,6 +1405,7 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 	{
 		system("cls");
 		printf("pdf");
+		pdf1();
 		system("pause");
 		main();
 	}
@@ -1290,7 +1413,7 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 	{
 		system("cls");
 		printf("ayuda");
-		//ShellExecute(NULL, TEXT("open"), TEXT("Ayuda.chm"), NULL, NULL, SW_SHOWNORMAL);
+		ShellExecute(NULL, TEXT("open"), TEXT("Ayuda.chm"), NULL, NULL, SW_SHOWNORMAL);
 		system("pause");
 		system("cls");
 		main();
@@ -1299,15 +1422,14 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 	{
 		system("cls");
 		printf("foto");
-		//ShellExecute(NULL, TEXT("open"), TEXT("FotoGrupal.exe"), NULL, NULL, SW_SHOWNORMAL);		
+		ShellExecute(NULL, TEXT("open"), TEXT("FotoGrupal.exe"), NULL, NULL, SW_SHOWNORMAL);		
 		system("pause");
 		main();
 	}
 	if (y == 17 && mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
 	{
 		system("cls");
-		//buck();
-		printf("buck");
+		buck();
 		system("pause");
 		system("cls");
 		main();
@@ -1315,7 +1437,7 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 	if (y == 19 && mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
 	{
 		system("cls");
-		//ShellExecute(NULL, TEXT("open"), TEXT("Proyecto.py"), NULL, NULL, SW_SHOWNORMAL);
+		ShellExecute(NULL, TEXT("open"), TEXT("Proyecto.py"), NULL, NULL, SW_SHOWNORMAL);
 		printf("python");
 		system("pause");
 		system("cls");
@@ -1325,7 +1447,7 @@ void GetMousePosWin(MOUSE_EVENT_RECORD mer)
 	{
 		system("cls");
 		printf("mongo");
-		//system("java -jar conexion_mongo.jar");
+		system("java -jar conexion_mongo.jar");
 
 		system("pause");		
 		system("cls");

@@ -29,11 +29,11 @@ public:
 	avl_node *rl_rotation(avl_node *);
 	avl_node* balance(avl_node *);
 	void reiniciar();
-	avl_node* insert(avl_node *, int);
-	void display(avl_node *, int, ALLEGRO_FONT *);
-	void inorder(avl_node *);
-	void preorder(avl_node *);
-	void postorder(avl_node *);
+	avl_node* insertar(avl_node *, int);
+	void dibujarArbol(avl_node *, int, ALLEGRO_FONT *,FILE *,char*);
+	void inorder(avl_node *, FILE *);
+	void preorder(avl_node *, FILE *);
+	void postorder(avl_node *, FILE *);
 	avl();
 private:
 	avl_node * root;

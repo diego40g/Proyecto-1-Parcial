@@ -20,26 +20,26 @@ void bmas::reiniciarBmas() {
 	xbm = 0;
 	ybm = 0;
 }
-node* bmas::getTargetNode(node *tNode, int val) {
+node* bmas::nodoDestino(node *tNode, int val) {
 	if (tNode->leaf) return tNode;
 	int i;
 	for (i = 0; i<tNode->value.size(); i++) {
 		if (tNode->value[i]>val) break;
 	}
-	return getTargetNode(tNode->child[i], val);
+	return nodoDestino(tNode->child[i], val);
 }
-node* bmas::getNewNode(bool isLeaf, bool isRoot) {
+node* bmas::nuevoNodo(bool isLeaf, bool isRoot) {
 	node* tmp = new node;
 	tmp->isRoot = isRoot;
 	tmp->leaf = isLeaf;
 	tmp->last = NULL;
 	return tmp;
 }
-void bmas::insertInParentNode(node *n, int kprime, node *nprime) {
+void bmas::nodoPadre(node *n, int kprime, node *nprime) {
 	// printf("dbg: reached insertinparennode\n");
 	//
 	if (n->isRoot) {
-		Root = getNewNode(false, true);
+		Root = nuevoNodo(false, true);
 		n->isRoot = false;
 
 		Root->child.push_back(n);
@@ -83,7 +83,7 @@ void bmas::insertInParentNode(node *n, int kprime, node *nprime) {
 		//printf("\n\np->child size: %d\n\n",p->child.size());
 
 		if (p->child.size()>nPointer) {
-			node *pprime = getNewNode(false, false);
+			node *pprime = nuevoNodo(false, false);
 			int nbytwoceil = (nPointer + 1) / 2;
 			int kdoubleprime = p->value[nbytwoceil - 1];
 			for (i = nbytwoceil; i<p->value.size(); i++) {
@@ -98,14 +98,14 @@ void bmas::insertInParentNode(node *n, int kprime, node *nprime) {
 			p->value.erase(p->value.begin() + nbytwoceil - 1, p->value.end());
 			p->child.erase(p->child.begin() + nbytwoceil, p->child.end());
 
-			insertInParentNode(p, kdoubleprime, pprime);
+			nodoPadre(p, kdoubleprime, pprime);
 		}
 	}
 
 }
 
 
-void bmas::insertInLeafNode(node *leafNode, int k, node *p) {
+void bmas::nodoHoja(node *leafNode, int k, node *p) {
 	int i;
 	for (i = 0; i<leafNode->value.size(); i++) {
 		if (k<leafNode->value[i]) break;
@@ -128,24 +128,24 @@ void bmas::insertInLeafNode(node *leafNode, int k, node *p) {
 
 }
 
-void bmas::insert2(int k, node *p) {
+void bmas::insertarBms(int k, node *p) {
 	node *leafNode;
 	if (Root == NULL) {
-		Root = getNewNode(true, true);
+		Root = nuevoNodo(true, true);
 		leafNode = Root;
 	}
-	else leafNode = getTargetNode(Root, k);
+	else leafNode = nodoDestino(Root, k);
 
 	//printf("dbg: target node content:\n");
 	//if(leafNode->value.size()>0) bfsTraverse(leafNode);
 
 	int keyValueCount = leafNode->value.size();
-	if (keyValueCount<nVal) insertInLeafNode(leafNode, k, p);
+	if (keyValueCount<nVal) nodoHoja(leafNode, k, p);
 	else {
 
 		//printf("dbg: reached in else1\n");
-		node* leafNode2 = getNewNode(true, false);
-		insertInLeafNode(leafNode, k, p);
+		node* leafNode2 = nuevoNodo(true, false);
+		nodoHoja(leafNode, k, p);
 
 		//printf("dbg: inserted in leaf node\n");
 		// printf("dbg: content\n");
@@ -184,14 +184,17 @@ void bmas::insert2(int k, node *p) {
 		//bfsTraverse(leafNode2);
 
 		int kprime = leafNode2->value[0];
-		insertInParentNode(leafNode, kprime, leafNode2);
+		nodoPadre(leafNode, kprime, leafNode2);
 	}
 }
 
 
-void bmas::valueOfNodeInBox(node* tNode, ALLEGRO_FONT *font) {
+void bmas::valorNodo(node* tNode, ALLEGRO_FONT *font,FILE* His, char *QR) {
+	char *aux = (char*)malloc(10 * sizeof(char));
 	xbm += 10;
 	printf(" [");
+	strcat(QR, " [");
+	fprintf(His," [");
 	al_draw_textf(font, al_map_rgb_f(0, 0, 0), xbm/*posicion en x*/, ybm/*posicion en y*/, 0, "[");//es como printf
 	xbm += 3;
 	int i;
@@ -200,27 +203,34 @@ void bmas::valueOfNodeInBox(node* tNode, ALLEGRO_FONT *font) {
 	//system("pause");
 	for (i = 0; i<tNode->value.size() - 1; i++) {
 		printf("%d|", tNode->value[i]);
+		_itoa(tNode->value[i], aux, 10);
+		strcat(QR, aux); strcat(QR, "|");
+		fprintf(His,"%d|", tNode->value[i]);
 		al_draw_textf(font, al_map_rgb_f(0, 0, 0), xbm/*posicion en x*/, ybm/*posicion en y*/, 0, "%d|",tNode->value[i]);//es como printf
+		fprintf(His,"%d|", tNode->value[i]);
 		xbm += 10;
 	}
 	if (tNode->value.size() > 0) { 
 		printf("%d]", tNode->value[i]);
+		fprintf(His,"%d]", tNode->value[i]);
+		_itoa(tNode->value[i], aux, 10);
+		strcat(QR, aux); strcat(QR,"]");
 		al_draw_textf(font, al_map_rgb_f(0, 0, 0), xbm/*posicion en x*/, ybm/*posicion en y*/, 0, "%d]",tNode->value[i]);//es como printf
 		xbm += 10;
 	}
 	//printf(" ");
 }
 
-void bmas::imp(ALLEGRO_FONT *font) {
+void bmas::imp(ALLEGRO_FONT *font,FILE *His, char *QR) {
 	printf("\n\n\n");
-	bfsTraverse(Root,font);
+	recorrer(Root,font,His,QR);
 	//bfsTraverse(Root);
 	printf("\n\n\n");
 }
 
 
 
-void bmas::bfsTraverse(node *tNode, ALLEGRO_FONT *font) {
+void bmas::recorrer(node *tNode, ALLEGRO_FONT *font,FILE *His, char *QR) {
 	
 	q.push(pNode(tNode, true));
 	while (!q.empty()) {
@@ -228,10 +238,12 @@ void bmas::bfsTraverse(node *tNode, ALLEGRO_FONT *font) {
 		//printf("  Got pNode ");
 		node *temp = p.tNode;
 		q.pop();
-		valueOfNodeInBox(temp, font);
+		valorNodo(temp, font,His, QR);
 		//printf(" printed temp ");
 		if (p.nl) { 
 			printf("\n");
+			strcat(QR, "\n");
+			fprintf(His,"\n");
 			ybm += 15;
 			xbm = 0;
 		}

@@ -1,0 +1,75 @@
+
+Arbol binario 
+
+Cadena ingresada en inOden
+ Mostrando ARBOL... 
+
+
+        5
+     4
+  3
+        2
+     1
+
+ Pre Orden  :  3124521543
+arbol b
+
+CADENA INGRESADA: 1,2,3,4
+M= 3
+2
+
+
+1
+3-4
+
+arbol b
+
+CADENA INGRESADA: 1,2,3
+M= 3
+2
+
+
+1
+3
+Arbol binario 
+
+Cadena ingresada en inOden
+ Mostrando ARBOL... 
+
+
+     3
+  2
+     1
+
+ Pre Orden  :  213132
+arbol b
+
+CADENA INGRESADA: 1,2,3
+M= 3
+2
+
+
+1
+3
+
+arbol b+
+ Mostrando ARBOL... 
+
+ [2]
+ [1] [2|2|3]
+
+
+arbol avl
+ Mostrando ARBOL... 
+
+
+                        4
+                3
+        2
+                1
+
+In-Orden:1  2  3  4  
+
+pre-Orden:2  1  3  4  
+
+post-Orden:1  4  3  2  

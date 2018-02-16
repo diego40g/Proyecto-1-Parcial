@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+int x, y;
 
 btree::btree(int nClv) : nClaves(nClv)
 {
@@ -29,55 +30,66 @@ void btree::BorrarNodo(pbnodo nodo)
 	delete nodo;
 }
 
-void btree::Mostrar(char **gra)
+int btree::Mostrar(char **gra)
 {
 	for (int i = 0; i<20; i++)
-	{
 		strcpy(*(gra + i), "");
-	}
-	printf("arbol");;
 	int cont = 0;
-	Ver(Entrada, gra, cont);
-	printf("-----");
+	printf("arbol\n");
+	cont = Ver(Entrada, gra, cont);
+	printf("-----\n");
 	system("pause");
+	return cont;
 }
 
-void btree::Ver(pbnodo nodo, char **gra, int cont)
+int btree::Ver(pbnodo nodo, char **gra, int cont)
 {
-	int i; char *cad = (char*)malloc(50 * sizeof(char));
-	//cont++;
+	int i;
+	int aux;
+	char *cad = (char*)malloc(50 * sizeof(char));
 	if (!nodo)
 	{
-		return;
+		return cont;
 	}
 	for (i = 0; i < nodo->clavesUsadas - 1; i++)
 	{
-		printf("%d-", nodo->clave[i].valor);
+		aux = 0;
+		aux = nodo->clave[i].valor;
+		printf("%d|", aux);
 		strcpy(cad, "");
-		sprintf(cad, "%d", nodo->clave[i].valor);
-		strcat(cad, "-");
+		sprintf(cad, "%d", aux);
+		strcat(cad, "|");
 		strcat(*(gra + cont), cad);
 	}
 	if (nodo->clavesUsadas)
 	{
-		printf("%d [", nodo->clave[i].valor);
+		aux = 0;
+		aux = nodo->clave[i].valor;
+		printf("%d[", aux);
 		strcpy(cad, "");
-		sprintf(cad, "%d", nodo->clave[i].valor);
+		sprintf(cad, "%d", aux);
 		strcat(*(gra + cont), cad);
+		cont++;
 	}
 	if (nodo->padre)
 	{
-		cont++;
-		printf("%d", (nodo->padre)->clave[0].valor);
+		aux = 0;
+		aux = (nodo->padre)->clave[0].valor;
+		printf("%d", aux);
 		strcpy(cad, "");
-		sprintf(cad, "%d", (nodo->padre)->clave[0].valor);
+		sprintf(cad, "%d", aux);
+		if (i != 0)
+		{
+			cont++;
+		}
 	}
 	else
 	{
-		cont++;
 		printf("*");
+		//cont++;
+		//Ver(nodo->puntero[0],gra,cont++);
 	}
-	printf("]");
+	printf("]\n");
 	cont++;
 	for (i = 0; i <= nodo->clavesUsadas; i++)
 	{
@@ -337,4 +349,38 @@ void btree::FundirNodo(pbnodo izquierda, pbnodo &padre, pbnodo derecha, int posC
 		padre = NULL;
 	}
 	delete derecha;
+}
+void btree::verArbolB(char **graf, ALLEGRO_FONT *font, int tam,FILE *His)
+{
+	tam += 2;
+	int aux = 0;
+	char *cad = (char*)malloc(50 * sizeof(char));
+	for (int i = 0; i<tam; i++)
+	{
+		strcpy(cad, *(graf + i));
+		if (strcmp(cad, "") == 0)
+		{
+			y += 10; x = 0;
+			al_draw_textf(font, al_map_rgb_f(0, 0, 0), x, y, 0, "%s", cad);
+			fprintf(His, "\n%s", cad);
+		}
+		else
+		{
+			if (i == 0)
+			{
+				y += 25; x = 0;
+				al_draw_textf(font, al_map_rgb_f(0, 0, 0), x, y, 0, "%s", cad); x = 0;
+				fprintf(His, "\n%s", cad);
+			}
+			else
+			{
+				al_draw_textf(font, al_map_rgb_f(0, 0, 0), x, y, 0, "%s", cad); x += (40);
+				fprintf(His, "\n%s", cad);
+			}
+		}
+	}
+}
+void btree::val(int xm,int ym) {
+	x = xm;
+	y = ym;
 }

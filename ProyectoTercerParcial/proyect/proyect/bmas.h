@@ -49,13 +49,13 @@ public:
 	bmas();
 	void reiniciarBmas();
 	void valores(int, int);
-	node* getTargetNode(node *tNode, int val);
-	node* getNewNode(bool isLeaf, bool isRoot);
-	void insertInParentNode(node *n, int kprime, node *nprime);
-	void insertInLeafNode(node *leafNode, int k, node *p);
-	void insert2(int k, node *p);
-	void valueOfNodeInBox(node* tNode, ALLEGRO_FONT *font);
-	void bfsTraverse(node *tNode, ALLEGRO_FONT *font);
-	void imp(ALLEGRO_FONT *font);
+	node* nodoDestino(node *tNode, int val);
+	node* nuevoNodo(bool isLeaf, bool isRoot);
+	void nodoPadre(node *n, int kprime, node *nprime);
+	void nodoHoja(node *leafNode, int k, node *p);
+	void insertarBms(int k, node *p);
+	void valorNodo(node* tNode, ALLEGRO_FONT *font, FILE*,char*);
+	void recorrer(node *tNode, ALLEGRO_FONT *font, FILE*,char*);
+	void imp(ALLEGRO_FONT *font,FILE*,char *);
 };
 

@@ -183,6 +183,7 @@
   <ItemGroup>
     <ClCompile Include="avl.cpp" />
     <ClCompile Include="b.cpp" />
+    <ClCompile Include="binario.cpp" />
     <ClCompile Include="bmas.cpp" />
     <ClCompile Include="btree.cpp" />
     <ClCompile Include="main.cpp" />
@@ -191,6 +192,7 @@
   <ItemGroup>
     <ClInclude Include="avl.h" />
     <ClInclude Include="b.h" />
+    <ClInclude Include="binario.h" />
     <ClInclude Include="bmas.h" />
     <ClInclude Include="btree.h" />
     <ClInclude Include="PDF.h" />
